@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Clean background -->
+  <rect x="0" y="0" width="64" height="64" fill="white" opacity="0" />
+  
+  <!-- Circular border -->
+  <circle cx="32" cy="32" r="30" fill="none" stroke="#9c27b0" stroke-width="2" />
+  
+  <!-- Professional CN Monogram (scaled down) -->
+  <g transform="translate(32, 32) scale(0.15)">
+    <!-- C Letter -->
+    <path d="M-80 -60 
+             C -120 -60, -140 -20, -140 0 
+             C -140 20, -120 60, -80 60 
+             L -20 60 
+             L -20 20 
+             L -70 20 
+             C -90 20, -100 10, -100 0 
+             C -100 -10, -90 -20, -70 -20 
+             L -20 -20 
+             L -20 -60 Z" 
+          fill="#9c27b0" />
+    
+    <!-- N Letter -->
+    <path d="M0 -60 
+             L 40 -60 
+             L 40 10 
+             L 80 -60 
+             L 120 -60 
+             L 120 60 
+             L 80 60 
+             L 80 -10 
+             L 40 60 
+             L 0 60 Z" 
+          fill="#9c27b0" />
+  </g>
+</svg> 

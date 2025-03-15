@@ -1,0 +1,21 @@
+{
+  "short_name": "CarringNanny",
+  "name": "CarringNanny - Connect with professional nannies",
+  "icons": [
+    {
+      "src": "images/favicon.svg",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "images/logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#9c27b0",
+  "background_color": "#f9f0ff"
+}
