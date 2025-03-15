@@ -41,7 +41,6 @@ CarringNanny is a modern platform connecting parents with qualified childcare pr
 
 ### Clone the Repository
 
-
 ### Set Up Backend
 ```bash
 cd backend
@@ -106,9 +105,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 Raj Rabadiya - [rajrabadiya.018@gmail.com](mailto:rajrabadiya.018@gmail.com)
 
-Project Link: [https://github.com/yourusername/nanny-connect](https://github.com/yourusername/nanny-connect)
-
-## �� Acknowledgements
+## Acknowledgements
 
 - [Material UI](https://mui.com/)
 - [MongoDB](https://www.mongodb.com/)
