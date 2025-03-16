@@ -100,7 +100,9 @@ const Home = () => {
         sx={{
           background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 70%, #5E35B1 100%)`,
           color: 'white',
-          py: { xs: 8, md: 12 },
+          pt: { xs: 3, sm: 5, md: 7 },
+          pb: { xs: 6, sm: 8, md: 12 },
+          mt: { xs: 0, sm: 0, md: 0 },
           position: 'relative',
           overflow: 'hidden',
           borderRadius: { md: '0 0 2.5rem 2.5rem' },

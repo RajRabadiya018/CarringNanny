@@ -9,8 +9,8 @@ const Layout = ({ children }) => {
   const location = useLocation();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
-  // Standard navbar height
-  const navbarHeight = 70;
+  // Responsive navbar height (consistent with AppBar)
+  const navbarHeight = isMobile ? 56 : useMediaQuery(theme.breakpoints.up('md')) ? 70 : 64;
     
   return (
     <ThemeProvider theme={theme}>
@@ -31,7 +31,16 @@ const Layout = ({ children }) => {
           sx={{
             flexGrow: 1,
             width: '100%',
-            pt: `${navbarHeight + 16}px`, // Add extra padding to prevent content from being hidden under navbar
+            pt: { 
+              xs: `${navbarHeight}px`,  
+              sm: `${navbarHeight}px`, 
+              md: `${navbarHeight}px` 
+            }, // Reduced base padding since it's now handled in each page
+            mt: { 
+              xs: 2,
+              sm: 2,
+              md: 2 
+            }, // Added consistent margin top
             pb: { xs: 4, sm: 6 },
             overflow: 'visible',
             position: 'relative',

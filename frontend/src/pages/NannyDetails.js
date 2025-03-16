@@ -158,10 +158,22 @@ const NannyDetails = () => {
     .map(([day]) => day.charAt(0).toUpperCase() + day.slice(1));
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Paper elevation={3} sx={{ borderRadius: 2, overflow: 'hidden' }}>
+    <Container maxWidth="lg" sx={{ 
+      py: 4,
+      pt: { xs: 5, sm: 6, md: 7 },
+      mt: { xs: 2, sm: 3, md: 4 }
+    }}>
+      <Paper elevation={3} sx={{ 
+        borderRadius: 2, 
+        overflow: 'hidden',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
+      }}>
         {/* Header with background */}
-        <Box sx={{ bgcolor: 'primary.main', p: 4, color: 'white' }}>
+        <Box sx={{ 
+          bgcolor: 'primary.main', 
+          p: { xs: 3, sm: 4, md: 5 },
+          color: 'white' 
+        }}>
           <Container maxWidth="md">
             <Grid container spacing={3} alignItems="center">
               <Grid item xs={12} md={3} sx={{ textAlign: { xs: 'center', md: 'left' } }}>
@@ -169,18 +181,29 @@ const NannyDetails = () => {
                   src={nanny.profileImage || ''}
                   alt={nanny.userId?.name}
                   sx={{ 
-                    width: 150, 
-                    height: 150, 
+                    width: { xs: 140, sm: 160, md: 180 }, // Responsive size
+                    height: { xs: 140, sm: 160, md: 180 }, // Responsive size
                     mx: { xs: 'auto', md: 0 }, 
-                    boxShadow: 3,
-                    bgcolor: 'grey.300'
+                    border: '4px solid white',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                    bgcolor: 'grey.300',
+                    fontSize: '3rem'  // Larger font for the initial
                   }}
                 >
                   {nanny.userId?.name?.charAt(0).toUpperCase()}
                 </Avatar>
               </Grid>
               <Grid item xs={12} md={9}>
-                <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom>
+                <Typography 
+                  variant="h4" 
+                  component="h1" 
+                  fontWeight="bold" 
+                  gutterBottom
+                  sx={{ 
+                    mb: 2,
+                    fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' }
+                  }}
+                >
                   {nanny.userId?.name}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', mb: 1 }}>
@@ -188,6 +211,7 @@ const NannyDetails = () => {
                     value={averageRating}
                     precision={0.5}
                     readOnly
+                    size="large"
                     emptyIcon={<StarIcon style={{ opacity: 0.55, color: 'white' }} fontSize="inherit" />}
                   />
                   <Typography variant="body1" sx={{ ml: 1 }}>
@@ -196,9 +220,14 @@ const NannyDetails = () => {
                       : `No ratings (0 reviews)`}
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <LocationOnIcon sx={{ mr: 1 }} />
-                  <Typography variant="body1">
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  mb: 2.5, // Increased spacing
+                  '& svg': { fontSize: 22 } // Slightly larger icons
+                }}>
+                  <LocationOnIcon sx={{ mr: 1.5 }} />
+                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
                     {nanny.location || formatAddress(nanny.userId?.address) || 'Location not specified'}
                   </Typography>
                   {user && user.role === 'nanny' && user._id === nanny.userId?._id && (
@@ -213,9 +242,14 @@ const NannyDetails = () => {
                     </Button>
                   )}
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <PhoneIcon sx={{ mr: 1 }} />
-                  <Typography variant="body1">
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  mb: 2.5, // Increased spacing
+                  '& svg': { fontSize: 22 } // Slightly larger icons
+                }}>
+                  <PhoneIcon sx={{ mr: 1.5 }} />
+                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
                     {nanny.phoneNumber || nanny.userId?.phone || 'Contact not specified'}
                   </Typography>
                   {user && user.role === 'nanny' && user._id === nanny.userId?._id && (
@@ -230,9 +264,13 @@ const NannyDetails = () => {
                     </Button>
                   )}
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <AccessTimeIcon sx={{ mr: 1 }} />
-                  <Typography variant="body1">{nanny.experience} years of experience</Typography>
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center',
+                  '& svg': { fontSize: 22 } // Slightly larger icons
+                }}>
+                  <AccessTimeIcon sx={{ mr: 1.5 }} />
+                  <Typography variant="body1" sx={{ fontWeight: 500 }}>{nanny.experience} years of experience</Typography>
                 </Box>
               </Grid>
             </Grid>

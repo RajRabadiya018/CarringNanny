@@ -220,13 +220,23 @@ const NannySearch = () => {
   });
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" fontWeight="bold" sx={{ mb: 1 }}>
-        Find Your Perfect Nanny
-      </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-        Browse through our qualified nannies and find the best match for your family
-      </Typography>
+    <Container maxWidth="xl" sx={{ 
+      py: 4,
+      pt: { xs: 4, sm: 5, md: 6 }, // Increased top padding
+      mt: { xs: 3, sm: 4, md: 5 } // Significantly increased margin top
+    }}>
+      <Box sx={{ mb: 5 }}> {/* Added a wrapper Box with more bottom margin */}
+        <Typography variant="h4" component="h1" fontWeight="bold" sx={{ 
+          mb: 2, // Increased space between heading and subheading
+          fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
+          letterSpacing: '-0.5px' // Added slight letter spacing for cleaner text
+        }}>
+          Find Your Perfect Nanny
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: "85%" }}>
+          Browse through our qualified nannies and find the best match for your family
+        </Typography>
+      </Box>
 
       <Box sx={{ 
         display: 'flex', 

@@ -324,10 +324,16 @@ const Navbar = ({ container }) => {
           backgroundColor: theme.palette.primary.main,
           color: '#fff',
           transition: 'all 0.3s ease-in-out',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+          height: { xs: 56, sm: 64, md: 70 },
         }}
       >
         <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{ height: 70, minHeight: { xs: 70, sm: 70 } }}>
+          <Toolbar disableGutters sx={{ 
+            height: { xs: 56, sm: 64, md: 70 }, 
+            minHeight: { xs: 56, sm: 64, md: 70 },
+            px: { xs: 1, sm: 2 }
+          }}>
             {/* Mobile menu icon */}
             <IconButton
               color="inherit"
@@ -347,7 +353,7 @@ const Navbar = ({ container }) => {
                 flexGrow: { xs: 1, md: 0 }
               }}
             >
-              <Logo size={36} withText={!isMobile} sx={{ color: '#fff' }} />
+              <Logo size={isMobile ? 26 : 36} withText={!isMobile} sx={{ color: '#fff' }} />
             </Box>
 
             {/* Desktop Navigation */}
@@ -419,8 +425,8 @@ const Navbar = ({ container }) => {
                         alt={user.name}
                         src={user.profilePicture}
                         sx={{
-                          width: 40,
-                          height: 40,
+                          width: { xs: 34, md: 40 },
+                          height: { xs: 34, md: 40 },
                           border: '2px solid #fff',
                           boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
                           transition: 'all 0.2s ease',
