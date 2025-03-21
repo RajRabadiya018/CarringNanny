@@ -14,29 +14,31 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import PersonIcon from '@mui/icons-material/Person';
 import PhoneIcon from '@mui/icons-material/Phone';
+import RepeatIcon from '@mui/icons-material/Repeat';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import WorkIcon from '@mui/icons-material/Work';
 import {
-  Alert,
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Chip,
-  CircularProgress,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Grid,
-  Paper,
-  Tab,
-  Tabs,
-  TextField,
-  Typography
+    Alert,
+    Avatar,
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    Chip,
+    CircularProgress,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    Grid,
+    Paper,
+    Tab,
+    Tabs,
+    TextField,
+    Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
@@ -1204,11 +1206,27 @@ const NannyDashboard = () => {
                           </Typography>
                         </Box>
                       </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                          <RepeatIcon sx={{ color: 'primary.main', mr: 1, fontSize: '1.2rem' }} />
+                          <Typography variant="body1">
+                            {selectedBooking.numberOfDays || 1} {selectedBooking.numberOfDays === 1 ? 'day' : 'days'}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                          <WorkIcon sx={{ color: 'primary.main', mr: 1, fontSize: '1.2rem' }} />
+                          <Typography variant="body1">
+                            {selectedBooking.serviceType === 'full-time' ? 'Full-time Care' : 'Part-time Care'}
+                          </Typography>
+                        </Box>
+                      </Grid>
                       <Grid item xs={12}>
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                           <LocationOnIcon sx={{ color: 'primary.main', mr: 1, fontSize: '1.2rem' }} />
                           <Typography variant="body1">
-                            {selectedBooking.location?.address || 'No address provided'}
+                            {formatLocation(selectedBooking.location) || 'No address provided'}
                           </Typography>
                         </Box>
                       </Grid>
@@ -1499,6 +1517,19 @@ const BookingsList = ({ bookings, onResponseClick, onCompleteClick, emptyMessage
       ))}
     </Grid>
   );
+};
+
+const formatLocation = (location) => {
+  if (!location) return null;
+  
+  let formattedLocation = '';
+  
+  if (location.address) formattedLocation += location.address;
+  if (location.city) formattedLocation += formattedLocation ? `, ${location.city}` : location.city;
+  if (location.state) formattedLocation += formattedLocation ? `, ${location.state}` : location.state;
+  if (location.zipCode) formattedLocation += formattedLocation ? ` ${location.zipCode}` : location.zipCode;
+  
+  return formattedLocation || null;
 };
 
 export default NannyDashboard;
