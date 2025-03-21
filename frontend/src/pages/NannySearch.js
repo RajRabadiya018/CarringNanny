@@ -557,82 +557,118 @@ const NannySearch = () => {
               </Box>
               <Grid container spacing={3}>
                 {filteredNannies.map((nanny) => (
-                  <Grid item xs={12} sm={6} md={4} key={nanny._id}>
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={nanny._id}>
                     <Card
                       sx={{
                         height: '100%',
                         display: 'flex',
                         flexDirection: 'column',
                         transition: 'transform 0.3s ease-in-out',
+                        maxWidth: '100%',
+                        borderRadius: 2,
+                        overflow: 'hidden',
                         '&:hover': {
-                          transform: 'translateY(-8px)',
-                          boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+                          transform: 'translateY(-5px)',
+                          boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
                         },
                       }}
                     >
-                      <CardMedia
-                        component="img"
-                        height="200"
-                        image={nanny.userId?.profileImage || `https://ui-avatars.com/api/?name=${nanny.userId?.name || 'Nanny'}&background=random&size=256`}
-                        alt={nanny.userId?.name}
-                      />
-                      <CardContent sx={{ flexGrow: 1 }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                          <Typography variant="h6" component="h3" fontWeight="bold">
+                      <Box sx={{ 
+                        position: 'relative',
+                        height: 160,
+                        width: '100%',
+                        backgroundColor: nanny.userId?.profileImage ? 'transparent' : 'rgba(0,0,0,0.05)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        overflow: 'hidden'
+                      }}>
+                        {nanny.userId?.profileImage ? (
+                          <CardMedia
+                            component="img"
+                            height="160"
+                            image={nanny.userId.profileImage}
+                            alt={nanny.userId?.name}
+                            sx={{
+                              objectFit: 'cover',
+                              width: '100%'
+                            }}
+                          />
+                        ) : (
+                          <Typography 
+                            variant="h2" 
+                            component="div" 
+                            sx={{ 
+                              fontWeight: 'bold',
+                              color: 'rgba(0,0,0,0.7)'
+                            }}
+                          >
+                            {nanny.userId?.name ? nanny.userId.name.substring(0, 2).toUpperCase() : 'NA'}
+                          </Typography>
+                        )}
+                      </Box>
+                      <CardContent sx={{ flexGrow: 1, p: 2 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+                          <Typography variant="subtitle1" component="h3" fontWeight="bold">
                             {nanny.userId?.name || 'Nanny'}
                           </Typography>
-                          <Typography variant="body1" color="primary" fontWeight="bold">
+                          <Typography variant="body2" color="primary" fontWeight="bold">
                             ${nanny.hourlyRate}/hr
                           </Typography>
                         </Box>
 
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
                           <Rating value={nanny.averageRating} precision={0.5} readOnly size="small" />
-                          <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
+                          <Typography variant="caption" color="text.secondary" sx={{ ml: 0.5 }}>
                             ({nanny.reviews?.length || 0} reviews)
                           </Typography>
                         </Box>
 
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                          <SchoolIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />
-                          <Typography variant="body2" color="text.secondary">
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                          <SchoolIcon fontSize="small" sx={{ mr: 0.5, color: 'text.secondary', fontSize: '0.9rem' }} />
+                          <Typography variant="caption" color="text.secondary">
                             {nanny.experience} {nanny.experience === 1 ? 'year' : 'years'} experience
                           </Typography>
                         </Box>
 
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2, height: 60, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {nanny.bio.substring(0, 120)}...
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, height: 40, overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '0.8rem' }}>
+                          {nanny.bio.substring(0, 100)}...
                         </Typography>
 
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
-                          {nanny.skills?.slice(0, 3).map((skill, index) => (
-                            <Chip key={index} label={skill} size="small" variant="outlined" />
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 1.5 }}>
+                          {nanny.skills?.slice(0, 2).map((skill, index) => (
+                            <Chip key={index} label={skill} size="small" variant="outlined" sx={{ height: 22, '& .MuiChip-label': { px: 1, fontSize: '0.7rem' } }} />
                           ))}
-                          {nanny.skills?.length > 3 && (
-                            <Chip label={`+${nanny.skills.length - 3} more`} size="small" variant="outlined" />
+                          {nanny.skills?.length > 2 && (
+                            <Chip label={`+${nanny.skills.length - 2} more`} size="small" variant="outlined" sx={{ height: 22, '& .MuiChip-label': { px: 1, fontSize: '0.7rem' } }} />
                           )}
                         </Box>
 
-                        <Button
-                          variant="contained"
-                          fullWidth
-                          component={RouterLink}
-                          to={`/nannies/${nanny._id}`}
-                        >
-                          View Profile
-                        </Button>
-                        
-                        {isAuthenticated && user.role === 'parent' && (
+                        <Box sx={{ mt: 'auto' }}>
                           <Button
-                            variant="outlined"
+                            variant="contained"
                             fullWidth
                             component={RouterLink}
-                            to={`/booking/${nanny._id}`}
-                            sx={{ mt: 1 }}
+                            to={`/nannies/${nanny._id}`}
+                            size="small"
+                            sx={{ mb: 0.75, py: 0.5, fontSize: '0.8rem' }}
                           >
-                            Book Now
+                            View Profile
                           </Button>
-                        )}
+                          
+                          {isAuthenticated && user.role === 'parent' && (
+                            <Button
+                              variant="outlined"
+                              fullWidth
+                              component={RouterLink}
+                              to={`/booking/${nanny._id}`}
+                              size="small"
+                              sx={{ py: 0.5, fontSize: '0.8rem' }}
+                            >
+                              Book Now
+                            </Button>
+                          )}
+                        </Box>
                       </CardContent>
                     </Card>
                   </Grid>

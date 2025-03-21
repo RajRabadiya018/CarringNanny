@@ -1,7 +1,5 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import ChildCareIcon from '@mui/icons-material/ChildCare';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
@@ -159,35 +157,37 @@ const NannyDetails = () => {
 
   return (
     <Container maxWidth="lg" sx={{ 
-      py: 4,
-      pt: { xs: 5, sm: 6, md: 7 },
+      py: 3,
+      pt: { xs: 4, sm: 5, md: 6 },
       mt: { xs: 2, sm: 3, md: 4 }
     }}>
       <Paper elevation={3} sx={{ 
         borderRadius: 2, 
         overflow: 'hidden',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
+        boxShadow: '0 4px 15px rgba(0,0,0,0.06)',
+        maxWidth: '85%',
+        mx: 'auto'
       }}>
         {/* Header with background */}
         <Box sx={{ 
           bgcolor: 'primary.main', 
-          p: { xs: 3, sm: 4, md: 5 },
+          p: { xs: 2, sm: 2.5, md: 3 },
           color: 'white' 
         }}>
-          <Container maxWidth="md">
-            <Grid container spacing={3} alignItems="center">
+          <Container maxWidth="md" sx={{ px: { xs: 1, sm: 2 } }}>
+            <Grid container spacing={2} alignItems="center">
               <Grid item xs={12} md={3} sx={{ textAlign: { xs: 'center', md: 'left' } }}>
                 <Avatar
                   src={nanny.profileImage || ''}
                   alt={nanny.userId?.name}
                   sx={{ 
-                    width: { xs: 140, sm: 160, md: 180 }, // Responsive size
-                    height: { xs: 140, sm: 160, md: 180 }, // Responsive size
+                    width: { xs: 110, sm: 130, md: 140 }, // Reduced size
+                    height: { xs: 110, sm: 130, md: 140 }, // Reduced size
                     mx: { xs: 'auto', md: 0 }, 
-                    border: '4px solid white',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                    border: '3px solid white',
+                    boxShadow: '0 6px 20px rgba(0,0,0,0.12)',
                     bgcolor: 'grey.300',
-                    fontSize: '3rem'  // Larger font for the initial
+                    fontSize: '2.5rem'  // Smaller font for the initial
                   }}
                 >
                   {nanny.userId?.name?.charAt(0).toUpperCase()}
@@ -200,21 +200,21 @@ const NannyDetails = () => {
                   fontWeight="bold" 
                   gutterBottom
                   sx={{ 
-                    mb: 2,
-                    fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' }
+                    mb: 1.5,
+                    fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }
                   }}
                 >
                   {nanny.userId?.name}
                 </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', mb: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', mb: 0.75 }}>
                   <Rating
                     value={averageRating}
                     precision={0.5}
                     readOnly
-                    size="large"
+                    size="medium"
                     emptyIcon={<StarIcon style={{ opacity: 0.55, color: 'white' }} fontSize="inherit" />}
                   />
-                  <Typography variant="body1" sx={{ ml: 1 }}>
+                  <Typography variant="body2" sx={{ ml: 1 }}>
                     {reviews && reviews.length > 0 
                       ? `${averageRating.toFixed(1)} (${reviews.length} reviews)`
                       : `No ratings (0 reviews)`}
@@ -223,11 +223,11 @@ const NannyDetails = () => {
                 <Box sx={{ 
                   display: 'flex', 
                   alignItems: 'center', 
-                  mb: 2.5, // Increased spacing
-                  '& svg': { fontSize: 22 } // Slightly larger icons
+                  mb: 1.5, // Reduced spacing
+                  '& svg': { fontSize: 18 } // Smaller icons
                 }}>
-                  <LocationOnIcon sx={{ mr: 1.5 }} />
-                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                  <LocationOnIcon sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
                     {nanny.location || formatAddress(nanny.userId?.address) || 'Location not specified'}
                   </Typography>
                   {user && user.role === 'nanny' && user._id === nanny.userId?._id && (
@@ -245,11 +245,11 @@ const NannyDetails = () => {
                 <Box sx={{ 
                   display: 'flex', 
                   alignItems: 'center', 
-                  mb: 2.5, // Increased spacing
-                  '& svg': { fontSize: 22 } // Slightly larger icons
+                  mb: 1.5, // Reduced spacing
+                  '& svg': { fontSize: 18 } // Smaller icons
                 }}>
-                  <PhoneIcon sx={{ mr: 1.5 }} />
-                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                  <PhoneIcon sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
                     {nanny.phoneNumber || nanny.userId?.phone || 'Contact not specified'}
                   </Typography>
                   {user && user.role === 'nanny' && user._id === nanny.userId?._id && (
@@ -267,10 +267,10 @@ const NannyDetails = () => {
                 <Box sx={{ 
                   display: 'flex', 
                   alignItems: 'center',
-                  '& svg': { fontSize: 22 } // Slightly larger icons
+                  '& svg': { fontSize: 18 } // Smaller icons
                 }}>
-                  <AccessTimeIcon sx={{ mr: 1.5 }} />
-                  <Typography variant="body1" sx={{ fontWeight: 500 }}>{nanny.experience} years of experience</Typography>
+                  <AccessTimeIcon sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>{nanny.experience} years of experience</Typography>
                 </Box>
               </Grid>
             </Grid>
@@ -278,65 +278,65 @@ const NannyDetails = () => {
         </Box>
 
         {/* Main content */}
-        <Container maxWidth="md" sx={{ py: 4 }}>
-          <Grid container spacing={4}>
+        <Container maxWidth="md" sx={{ py: 3, px: { xs: 2, sm: 3 } }}>
+          <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
-              <Typography variant="h5" fontWeight="bold" gutterBottom>
+              <Typography variant="h5" fontWeight="bold" gutterBottom sx={{ fontSize: { xs: '1.25rem', sm: '1.35rem' } }}>
                 About Me
               </Typography>
-              <Typography variant="body1" paragraph>
+              <Typography variant="body2" paragraph>
                 {nanny.bio}
               </Typography>
 
-              <Divider sx={{ my: 3 }} />
+              <Divider sx={{ my: 2.5 }} />
 
-              <Typography variant="h5" fontWeight="bold" gutterBottom>
+              <Typography variant="h5" fontWeight="bold" gutterBottom sx={{ fontSize: { xs: '1.25rem', sm: '1.35rem' } }}>
                 Services Offered
               </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75, mb: 2.5 }}>
                 {nanny.servicesOffered && nanny.servicesOffered.length > 0 ? (
                   nanny.servicesOffered.map((service, index) => (
                     <Chip
                       key={index}
                       label={service}
-                      icon={<LocalOfferIcon />}
                       color="primary"
                       variant="outlined"
-                      sx={{ m: 0.5 }}
+                      size="small"
+                      sx={{ fontSize: '0.75rem' }}
                     />
                   ))
                 ) : (
                   <Typography variant="body2" color="text.secondary">
-                    No services specified.
+                    No services specified
                   </Typography>
                 )}
               </Box>
 
-              <Divider sx={{ my: 3 }} />
+              <Divider sx={{ my: 2.5 }} />
 
-              <Typography variant="h5" fontWeight="bold" gutterBottom>
+              <Typography variant="h5" fontWeight="bold" gutterBottom sx={{ fontSize: { xs: '1.25rem', sm: '1.35rem' } }}>
                 Age Groups
               </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75, mb: 2.5 }}>
                 {nanny.ageGroupsServed && nanny.ageGroupsServed.length > 0 ? (
                   nanny.ageGroupsServed.map((ageGroup, index) => (
                     <Chip
                       key={index}
                       label={ageGroup}
-                      icon={<ChildCareIcon />}
                       color="secondary"
                       variant="outlined"
-                      sx={{ m: 0.5 }}
+                      size="small"
+                      sx={{ fontSize: '0.75rem' }}
                     />
                   ))
                 ) : (
                   <Typography variant="body2" color="text.secondary">
-                    No age groups specified.
+                    No age groups specified
                   </Typography>
                 )}
               </Box>
 
-              <Divider sx={{ my: 3 }} />
+              <Divider sx={{ my: 2.5 }} />
 
               {/* Reviews Section */}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -353,137 +353,177 @@ const NannyDetails = () => {
                 </Box>
               </Box>
 
+              <Typography variant="h5" fontWeight="bold" gutterBottom sx={{ fontSize: { xs: '1.25rem', sm: '1.35rem' } }}>
+                Reviews
+              </Typography>
               {reviewsLoading ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
                   <CircularProgress size={30} />
                 </Box>
               ) : reviews.length > 0 ? (
-                <Box sx={{ mt: 2 }}>
-                  {reviews.map((review, index) => (
-                    <Card key={index} variant="outlined" sx={{ mb: 2 }}>
-                      <CardContent>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Avatar
-                              src={review.user?.profileImage}
-                              alt={review.user?.name}
-                              sx={{ width: 40, height: 40, mr: 2, bgcolor: 'primary.light' }}
-                            >
-                              {review.user?.name?.charAt(0).toUpperCase()}
-                            </Avatar>
-                            <Box>
-                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Typography variant="subtitle1" fontWeight="bold">
-                                  {review.user?.name}
-                                </Typography>
-                                {review.verified && (
-                                  <VerifiedIcon 
-                                    color="primary" 
-                                    fontSize="small" 
-                                    sx={{ ml: 0.5 }} 
-                                    titleAccess="Verified Booking" 
-                                  />
-                                )}
-                              </Box>
-                              <Typography variant="caption" color="text.secondary">
-                                {new Date(review.createdAt).toLocaleDateString('en-US', {
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric'
-                                })}
-                              </Typography>
-                            </Box>
-                          </Box>
+                reviews.map((review) => (
+                  <Card key={review._id} sx={{ mb: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.05)', borderRadius: 1.5 }}>
+                    <CardContent sx={{ p: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <Avatar
+                          src={review.parentId?.profileImage}
+                          alt={review.parentId?.name}
+                          sx={{ width: 35, height: 35, mr: 1.5 }}
+                        >
+                          {review.parentId?.name?.charAt(0)}
+                        </Avatar>
+                        <Box>
+                          <Typography variant="subtitle2" fontWeight="medium">
+                            {review.parentId?.name || 'Anonymous Parent'}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {new Date(review.createdAt).toLocaleDateString()}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ ml: 'auto' }}>
                           <Rating value={review.rating} readOnly size="small" />
                         </Box>
-                        <Typography variant="body2" sx={{ mt: 2 }}>
-                          {review.comment}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </Box>
+                      </Box>
+                      <Typography variant="body2">
+                        {review.comment}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                ))
               ) : (
-                <Box sx={{ 
-                  p: 3, 
-                  bgcolor: 'background.paper', 
-                  borderRadius: 2,
-                  border: '1px dashed',
-                  borderColor: 'divider',
-                  textAlign: 'center'
-                }}>
-                  <Typography variant="body1" color="text.secondary">
-                    No reviews yet.
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                    Reviews will appear here after parents complete bookings with this nanny.
-                  </Typography>
-                </Box>
+                <Typography variant="body2" color="text.secondary" sx={{ py: 1 }}>
+                  No reviews yet.
+                </Typography>
               )}
             </Grid>
 
             <Grid item xs={12} md={4}>
-              <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
-                <Typography variant="h6" fontWeight="bold" gutterBottom>
-                  <span style={{ color: '#3F51B5' }}>${nanny.hourlyRate}</span> / hour
-                </Typography>
-
-                <Box sx={{ my: 3 }}>
-                  <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                    Weekly Availability
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
-                      <Chip
-                        key={day}
-                        label={day}
-                        color={availableDays.includes(day) ? 'primary' : 'default'}
-                        variant={availableDays.includes(day) ? 'filled' : 'outlined'}
-                        icon={availableDays.includes(day) ? <EventAvailableIcon /> : <QueryBuilderIcon />}
-                        sx={{ mb: 1 }}
-                      />
-                    ))}
-                  </Box>
-                </Box>
-
-                <Divider sx={{ my: 3 }} />
-
-                <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 1 }}>
-                  By booking with {nanny.userId?.name}, you agree to our Terms and Conditions.
-                </Typography>
-                {user && user.role === 'nanny' && user._id === nanny.userId?._id ? (
-                  <Button
-                    component={Link}
-                    to="/nanny/dashboard"
-                    variant="contained"
-                    fullWidth
-                    sx={{ mt: 2 }}
+              <Box sx={{ position: 'sticky', top: 20 }}>
+                <Paper elevation={1} sx={{ 
+                  p: 2.5, 
+                  borderRadius: 2, 
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.05)', 
+                  border: '1px solid rgba(0,0,0,0.06)'
+                }}>
+                  <Typography 
+                    variant="h6" 
+                    gutterBottom 
+                    sx={{ 
+                      fontWeight: 'bold',
+                      mb: 2,
+                      fontSize: '1.1rem'
+                    }}
                   >
-                    Back to Dashboard
-                  </Button>
-                ) : (
-                  <>
+                    Booking Information
+                  </Typography>
+                  
+                  <Box sx={{ mb: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+                      <EventAvailableIcon sx={{ color: 'primary.main', mr: 1, fontSize: '1.1rem' }} />
+                      <Typography variant="body2" fontWeight="medium">
+                        Available Days
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, pl: 2.5 }}>
+                      {availableDays.length > 0 ? (
+                        availableDays.map((day) => (
+                          <Chip 
+                            key={day} 
+                            label={day} 
+                            size="small"
+                            sx={{ fontSize: '0.7rem', height: 22 }}
+                          />
+                        ))
+                      ) : (
+                        <Typography variant="body2" color="text.secondary">
+                          Availability not specified
+                        </Typography>
+                      )}
+                    </Box>
+                  </Box>
+                  
+                  <Box sx={{ mb: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+                      <QueryBuilderIcon sx={{ color: 'primary.main', mr: 1, fontSize: '1.1rem' }} />
+                      <Typography variant="body2" fontWeight="medium">
+                        Hourly Rate
+                      </Typography>
+                    </Box>
+                    <Typography 
+                      variant="h6" 
+                      color="primary.main" 
+                      sx={{ 
+                        fontWeight: 'bold', 
+                        display: 'flex', 
+                        alignItems: 'center',
+                        pl: 2.5,
+                        fontSize: '1.2rem'
+                      }}
+                    >
+                      ${nanny.hourlyRate}/hr
+                      {nanny.verifiedNanny && (
+                        <Chip 
+                          icon={<VerifiedIcon fontSize="small" />} 
+                          label="Verified" 
+                          color="primary" 
+                          size="small" 
+                          sx={{ ml: 1, fontSize: '0.7rem', height: 22 }} 
+                        />
+                      )}
+                    </Typography>
+                  </Box>
+
+                  <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1, fontSize: '0.75rem' }}>
+                    By booking with {nanny.userId?.name}, you agree to our Terms and Conditions.
+                  </Typography>
+                  {user && user.role === 'nanny' && user._id === nanny.userId?._id ? (
                     <Button
+                      component={Link}
+                      to="/nanny/dashboard"
                       variant="contained"
-                      color="primary"
                       fullWidth
-                      size="large"
-                      onClick={handleBookNanny}
-                      sx={{ mb: 2 }}
+                      size="small"
+                      sx={{ 
+                        mt: 1.5,
+                        py: 1,
+                        fontSize: '0.85rem'
+                      }}
                     >
-                      Book Now
+                      Back to Dashboard
                     </Button>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      fullWidth
-                      onClick={() => navigate('/nannies')}
-                    >
-                      Back to Nanny Search
-                    </Button>
-                  </>
-                )}
-              </Paper>
+                  ) : (
+                    <>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        size="small"
+                        onClick={handleBookNanny}
+                        sx={{ 
+                          mb: 1,
+                          py: 1,
+                          fontSize: '0.85rem'
+                        }}
+                      >
+                        Book Now
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        fullWidth
+                        size="small"
+                        onClick={() => navigate('/nannies')}
+                        sx={{ 
+                          fontSize: '0.85rem',
+                          py: 0.75
+                        }}
+                      >
+                        Back to Nanny Search
+                      </Button>
+                    </>
+                  )}
+                </Paper>
+              </Box>
             </Grid>
           </Grid>
         </Container>
