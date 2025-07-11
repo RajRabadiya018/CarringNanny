@@ -22,22 +22,22 @@ import {
     Avatar,
     Box,
     Button,
-  Card,
-  CardActions,
+    Card,
+    CardActions,
     CardContent,
-  Chip,
-  CircularProgress,
+    Chip,
+    CircularProgress,
     Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     Divider,
     Grid,
     Paper,
     Tab,
     Tabs,
-  TextField,
+    TextField,
     Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -1245,7 +1245,7 @@ const NannyDashboard = () => {
                           <PaymentIcon sx={{ color: 'primary.main', mr: 1, fontSize: '1.2rem', mt: 0.3 }} />
                           <Box>
                             <Typography variant="body1" fontWeight="medium" color="#7C4DFF">
-                              Total: ${selectedBooking.totalPrice || 'N/A'}
+                              Total: ₹{selectedBooking.totalPrice > 0 ? selectedBooking.totalPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : (selectedBooking.nannyId?.hourlyRate || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                             </Typography>
                             <Typography variant="caption" color="text.secondary">
                               {selectedBooking.serviceType === 'part-time' ? 'Part-time Care' : 'Full-time Care'}
@@ -1420,7 +1420,7 @@ const BookingsList = ({ bookings, onResponseClick, onCompleteClick, emptyMessage
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <PaymentIcon sx={{ color: 'primary.main', mr: 1 }} />
                     <Typography variant="body1" fontWeight="bold" sx={{ color: '#7C4DFF' }}>
-                      Total: ${booking.totalPrice}
+                      Total: ₹{booking.totalPrice > 0 ? booking.totalPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : (booking.nannyId?.hourlyRate || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     </Typography>
                   </Box>
                 </Grid>

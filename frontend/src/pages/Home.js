@@ -240,7 +240,7 @@ const Home = () => {
                       textShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
                     }}
                   >
-                    Connect with professional, verified nannies who match your family's unique needs. 
+                    Connect with professional, nannies who match your family's unique needs. 
                     Book appointments, manage schedules, and find the perfect childcare solution.
                   </Typography>
                   <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>

@@ -100,11 +100,27 @@ const ParentDashboard = () => {
       setLoading(true);
       setError(null);
 
+      console.log('Fetching bookings for parent dashboard...');
       const { data } = await axios.get('/api/bookings/parent');
+      console.log('Bookings fetched successfully:', data.length);
       setBookings(data);
     } catch (error) {
       console.error('Error fetching bookings:', error);
-      setError('Failed to fetch your bookings. Please try again later.');
+      
+      // Provide more specific error messages based on error type
+      if (error.response) {
+        // The request was made and the server responded with a status code outside of 2xx range
+        console.error('Server responded with error:', error.response.data);
+        const errorMessage = error.response.data.error || 'Failed to fetch your bookings. Please try again later.';
+        setError(errorMessage);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+        setError('Unable to connect to the server. Please check your internet connection and try again.');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setError('Failed to fetch your bookings. Please try again later.');
+      }
     } finally {
       setLoading(false);
     }
@@ -609,7 +625,7 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
                     }}>
                       <Avatar
                         src={booking.nannyId?.userId?.profileImage}
-                        alt={booking.nannyId?.userId?.name}
+                        alt={booking.nannyName || booking.nannyId?.userId?.name || 'Nanny'}
                         sx={{ 
                           width: 100, 
                           height: 100, 
@@ -619,7 +635,7 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
                         }}
                       />
                       <Typography variant="h6" fontWeight="bold" align="center">
-                        {booking.nannyId?.userId?.name}
+                        {booking.nannyName || booking.nannyId?.userId?.name || 'Nanny'}
                       </Typography>
                       <Typography 
                         variant="body1" 
@@ -683,7 +699,7 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <PaymentIcon sx={{ color: 'primary.main', mr: 1.5, fontSize: '1.3rem' }} />
                         <Typography variant="body1" fontWeight="bold" sx={{ color: 'primary.main' }}>
-                          Total: ${booking.totalPrice}
+                          Total: ₹{booking.totalPrice > 0 ? booking.totalPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : (booking.nannyId?.hourlyRate || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                         </Typography>
                       </Box>
                     </Paper>

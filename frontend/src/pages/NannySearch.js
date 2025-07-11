@@ -3,29 +3,29 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import SchoolIcon from '@mui/icons-material/School';
 import SearchIcon from '@mui/icons-material/Search';
 import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Alert,
-    Box,
-    Button,
-    Card,
-    CardContent,
-    CardMedia,
-    Chip,
-    CircularProgress,
-    Container,
-    FormControl,
-    Grid,
-    InputAdornment,
-    InputLabel,
-    MenuItem,
-    Paper,
-    Rating,
-    Select,
-    Slider,
-    TextField,
-    Typography
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  Chip,
+  CircularProgress,
+  Container,
+  FormControl,
+  Grid,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Rating,
+  Select,
+  Slider,
+  TextField,
+  Typography
 } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -39,8 +39,8 @@ const NannySearch = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
-    minRate: 10,
-    maxRate: 50,
+    minRate: 1000,
+    maxRate: 10000,
     minExperience: 0,
     minRating: 0,
     skills: [],
@@ -279,8 +279,8 @@ const NannySearch = () => {
             <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
               <FilterListIcon sx={{ mr: 1 }} /> 
               Filters
-              {(filters.minRate !== 10 || 
-                filters.maxRate !== 50 || 
+              {(filters.minRate !== 1000 || 
+                filters.maxRate !== 10000 || 
                 filters.minExperience !== 0 || 
                 filters.minRating !== 0 || 
                 filters.skills.length > 0 || 
@@ -303,7 +303,7 @@ const NannySearch = () => {
               </AccordionSummary>
               <AccordionDetails>
                 <Typography variant="body2" gutterBottom>
-                  ${filters.minRate} - ${filters.maxRate} per hour
+                ₹{filters.minRate} - ₹{filters.maxRate} per hour
                 </Typography>
                 <Slider
                   value={[filters.minRate, filters.maxRate]}
@@ -311,11 +311,11 @@ const NannySearch = () => {
                     handleFilterChange('minRate', newValue[0]);
                     handleFilterChange('maxRate', newValue[1]);
                   }}
-                  min={5}
-                  max={100}
+                  min={1000}
+                  max={10000}
                   step={5}
                   valueLabelDisplay="auto"
-                  valueLabelFormat={(value) => `$${value}`}
+                  valueLabelFormat={(value) => `₹${value}`}
                 />
               </AccordionDetails>
             </Accordion>
@@ -613,7 +613,7 @@ const NannySearch = () => {
                             {nanny.userId?.name || 'Nanny'}
                           </Typography>
                           <Typography variant="body2" color="primary" fontWeight="bold">
-                            ${nanny.hourlyRate}/hr
+                          ₹{nanny.hourlyRate}/hr
                           </Typography>
                         </Box>
 

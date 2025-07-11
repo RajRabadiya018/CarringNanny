@@ -29,24 +29,10 @@ import {
     useMediaQuery,
     useTheme
 } from '@mui/material';
-import { keyframes } from '@mui/system';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Logo from '../common/Logo';
-
-// Define animations
-const float = keyframes`
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
-  100% { transform: translateY(0px); }
-`;
-
-const pulse = keyframes`
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-`;
 
 const Navbar = ({ container }) => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -101,6 +87,12 @@ const Navbar = ({ container }) => {
     if (path === '/') {
       return location.pathname === path;
     }
+    
+    // Handle dashboard paths specially to ensure correct highlighting
+    if (path.includes('/dashboard')) {
+      return location.pathname.includes(path);
+    }
+    
     return location.pathname.startsWith(path);
   };
 
@@ -186,6 +178,12 @@ const Navbar = ({ container }) => {
         roleColor: theme.palette.secondary.main,
         roleIcon: <FamilyRestroomIcon fontSize="small" />,
         roleName: 'Parent'
+      };
+    } else if (user?.role === 'admin') {
+      return {
+        roleColor: theme.palette.error.main,
+        roleIcon: <AdminPanelSettingsIcon fontSize="small" />,
+        roleName: 'Admin'
       };
     } else {
       return {
@@ -318,85 +316,85 @@ const Navbar = ({ container }) => {
     <>
       <AppBar 
         position="fixed" 
-        elevation={0}
-        sx={{ 
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: theme.palette.primary.main,
-          color: '#fff',
-          transition: 'all 0.3s ease-in-out',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-          height: { xs: 56, sm: 64, md: 70 },
+        elevation={scrolled ? 2 : 0}
+        sx={{
+          bgcolor: scrolled ? 'white' : 'primary.main',
+          transition: 'all 0.3s ease',
+          borderBottom: scrolled ? `1px solid ${theme.palette.grey[200]}` : 'none',
+          zIndex: theme.zIndex.drawer + 1,
         }}
       >
-        <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{ 
-            height: { xs: 56, sm: 64, md: 70 }, 
-            minHeight: { xs: 56, sm: 64, md: 70 },
-            px: { xs: 1, sm: 2 }
-          }}>
-            {/* Mobile menu icon */}
+        <Container maxWidth="lg">
+          <Toolbar 
+            disableGutters 
+            sx={{ 
+              height: { xs: '56px', md: '70px' }, 
+              minHeight: { xs: '56px', md: '70px' },
+              px: { xs: 1, sm: 2 }
+            }}
+          >
+            {/* Mobile Menu Button */}
             <IconButton
-              color="inherit"
+              color={scrolled ? "primary" : "inherit"}
               aria-label="open drawer"
               edge="start"
               onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { sm: 'none' } }}
+              sx={{ 
+                mr: 2, 
+                display: { xs: 'flex', md: 'none' },
+                backgroundColor: scrolled ? 'transparent' : 'rgba(255, 255, 255, 0.15)',
+                '&:hover': {
+                  backgroundColor: scrolled ? 'rgba(126, 87, 194, 0.1)' : 'rgba(255, 255, 255, 0.25)',
+                }
+              }}
             >
               <MenuIcon />
             </IconButton>
-
-            {/* Logo and Branding */}
-            <Box 
-              sx={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                flexGrow: { xs: 1, md: 0 }
-              }}
-            >
-              <Logo size={isMobile ? 26 : 36} withText={!isMobile} sx={{ color: '#fff' }} />
+            
+            {/* Logo */}
+            <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: { xs: 1, md: 0 } }}>
+              <Logo 
+                size={isMobile ? 'small' : 'medium'} 
+                withText={!isMobile} 
+                sx={{ 
+                  color: scrolled ? theme.palette.primary.main : '#fff',
+                  display: 'flex',
+                  mr: { xs: 0, md: 3 },
+                }}
+              />
             </Box>
-
+            
             {/* Desktop Navigation */}
-            <Box sx={{ 
-              flexGrow: 1, 
-              display: { xs: 'none', md: 'flex' }, 
-              justifyContent: 'center',
-            }}>
-              {navItems.map((item) => (
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, ml: 2 }}>
+              {navItems.map((page) => (
                 <Button
-                  key={item.name}
+                  key={page.name}
                   component={RouterLink}
-                  to={item.path}
-                  startIcon={item.icon}
+                  to={page.path}
                   sx={{
-                    color: '#fff',
+                    my: 2, 
                     mx: 1,
-                    my: 2,
-                    fontWeight: isActive(item.path) ? 700 : 500,
-                    borderRadius: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    color: scrolled ? 'text.primary' : 'white',
+                    fontWeight: isActive(page.path) ? 700 : 500,
                     position: 'relative',
                     '&:after': {
                       content: '""',
                       position: 'absolute',
-                      bottom: '6px',
+                      bottom: '5px',
                       left: '50%',
-                      width: isActive(item.path) ? '30%' : '0%',
-                      height: '3px',
-                      borderRadius: '2px',
-                      backgroundColor: '#fff',
+                      width: isActive(page.path) ? '30%' : '0%',
                       transform: 'translateX(-50%)',
-                      transition: 'width 0.3s ease',
+                      borderBottom: `3px solid ${scrolled ? theme.palette.primary.main : '#fff'}`,
+                      transition: 'width 0.3s ease'
                     },
-                    '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                      transform: 'translateY(-3px)',
-                      '&:after': {
-                        width: '30%',
-                      }
+                    '&:hover:after': {
+                      width: '30%',
                     }
                   }}
                 >
-                  {item.name}
+                  {page.name}
                 </Button>
               ))}
             </Box>

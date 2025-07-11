@@ -309,7 +309,7 @@ const NannyProfileSetup = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Hourly Rate (USD)"
+                  label="Hourly Rate (INR)"
                   type="number"
                   value={hourlyRate}
                   onChange={(e) => setHourlyRate(e.target.value)}
@@ -317,7 +317,7 @@ const NannyProfileSetup = () => {
                   margin="normal"
                   InputProps={{ 
                     inputProps: { min: 5 },
-                    startAdornment: <InputAdornment position="start">$</InputAdornment>
+                    startAdornment: <InputAdornment position="start">₹</InputAdornment>
                   }}
                   required
                 />

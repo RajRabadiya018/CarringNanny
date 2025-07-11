@@ -3,46 +3,43 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import {
-    Box,
-    Container,
-    Divider,
-    Grid,
-    IconButton,
-    Link,
-    Typography,
-    useTheme,
-} from '@mui/material';
+import { Box, Container, Divider, Grid, IconButton, Link, Typography } from '@mui/material';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import Logo from '../common/Logo';
 
 const Footer = () => {
-  const theme = useTheme();
-  
   const handlePolicyClick = (policyName) => (e) => {
     e.preventDefault();
     alert(`${policyName} will be available soon.`);
   };
-  
+
   return (
     <Box
       sx={{
         bgcolor: 'primary.main',
         color: 'white',
-        py: 6,
+        py: { xs: 4, sm: 6 },
         mt: 'auto',
+        width: '100%',
+        position: 'relative',
+        zIndex: 0,
       }}
       component="footer"
     >
       <Container maxWidth="lg">
-        <Grid container spacing={4}>
+        <Grid container spacing={{ xs: 2, sm: 4 }}>
           <Grid item xs={12} sm={4}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <Logo size="medium" sx={{ mr: 1, filter: 'brightness(1.2)' }} />
-              <Typography variant="h5" component="div" fontWeight="bold">
-                CarringNanny
-              </Typography>
+              <Logo
+                size="medium"
+                sx={{
+                  mr: 1,
+                  filter: 'brightness(1.2)',
+                  color: '#fff',
+                }}
+                withText
+              />
             </Box>
             <Typography variant="body2" sx={{ mb: 2 }}>
               Connecting parents with professional nannies for quality childcare services.
@@ -62,8 +59,8 @@ const Footer = () => {
               </IconButton>
             </Box>
           </Grid>
-          
-          <Grid item xs={12} sm={4}>
+
+          <Grid item xs={6} sm={4}>
             <Typography variant="h6" component="div" fontWeight="bold" gutterBottom>
               Quick Links
             </Typography>
@@ -80,8 +77,8 @@ const Footer = () => {
               Login
             </Link>
           </Grid>
-          
-          <Grid item xs={12} sm={4}>
+
+          <Grid item xs={6} sm={4}>
             <Typography variant="h6" component="div" fontWeight="bold" gutterBottom>
               Contact Us
             </Typography>
@@ -89,7 +86,7 @@ const Footer = () => {
               Email: rajrabadiya.018@gmail.com
             </Typography>
             <Typography variant="body2" sx={{ mb: 1 }}>
-              Phone: +1 (555) 123-4567
+              Phone: +91 1234567890
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
               <BusinessIcon fontSize="small" sx={{ mr: 0.5 }} />
@@ -99,37 +96,46 @@ const Footer = () => {
             </Box>
           </Grid>
         </Grid>
-        
+
         <Divider sx={{ my: 3, bgcolor: 'rgba(255, 255, 255, 0.2)' }} />
-        
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-          <Typography variant="body2" sx={{ mb: { xs: 2, md: 0 } }}>
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            justifyContent: 'space-between',
+            alignItems: { xs: 'center', sm: 'flex-start' },
+            flexWrap: 'wrap',
+          }}
+        >
+          <Typography variant="body2" sx={{ mb: { xs: 2, sm: 0 }, textAlign: { xs: 'center', sm: 'left' } }}>
             © {new Date().getFullYear()} CarringNanny. All rights reserved.
           </Typography>
-          <Box>
-            <Link 
-              component="a" 
-              href="#" 
-              onClick={handlePolicyClick('Privacy Policy')} 
-              color="inherit" 
-              sx={{ mr: 2 }}
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <Link
+              component="a"
+              href="#"
+              onClick={handlePolicyClick('Privacy Policy')}
+              color="inherit"
+              sx={{ mx: 1, mb: { xs: 1, sm: 0 } }}
             >
               Privacy Policy
             </Link>
-            <Link 
-              component="a" 
-              href="#" 
-              onClick={handlePolicyClick('Terms of Service')} 
-              color="inherit" 
-              sx={{ mr: 2 }}
+            <Link
+              component="a"
+              href="#"
+              onClick={handlePolicyClick('Terms of Service')}
+              color="inherit"
+              sx={{ mx: 1, mb: { xs: 1, sm: 0 } }}
             >
               Terms of Service
             </Link>
-            <Link 
-              component="a" 
-              href="#" 
-              onClick={handlePolicyClick('Cookies Policy')} 
+            <Link
+              component="a"
+              href="#"
+              onClick={handlePolicyClick('Cookies Policy')}
               color="inherit"
+              sx={{ mx: 1 }}
             >
               Cookies Policy
             </Link>

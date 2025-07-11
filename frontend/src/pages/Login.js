@@ -38,14 +38,37 @@ const Login = () => {
     }
 
     try {
-      await login(email, password);
+      const userData = await login(email, password);
+      console.log('Login successful:', userData);
       
-      // Check if there's a redirect path in location state
-      const redirectTo = location.state?.redirectTo || '/';
-      navigate(redirectTo);
+      // Navigate based on user role
+      if (userData.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else if (userData.role === 'nanny') {
+        navigate('/nanny/dashboard');
+      } else if (userData.role === 'parent') {
+        navigate('/parent/dashboard');
+      } else {
+        // Fallback or for any other role
+        navigate('/');
+      }
     } catch (error) {
       // Error will be handled by the AuthContext
       console.error('Login error:', error);
+    }
+  };
+
+  // Admin login shortcut for testing
+  const handleAdminLogin = async () => {
+    try {
+      setEmail('admin@carringnanny.com');
+      setPassword('Admin@12345');
+      
+      const userData = await login('admin@carringnanny.com', 'Admin@12345');
+      console.log('Admin login successful:', userData);
+      navigate('/admin/dashboard');
+    } catch (error) {
+      console.error('Admin login error:', error);
     }
   };
 
@@ -147,6 +170,18 @@ const Login = () => {
               disabled={loading}
             >
               {loading ? <CircularProgress size={24} /> : 'Log In'}
+            </Button>
+            
+            <Button
+              type="button"
+              fullWidth
+              variant="outlined"
+              color="secondary"
+              sx={{ mb: 2, py: 1 }}
+              onClick={handleAdminLogin}
+              disabled={loading}
+            >
+              Login as Admin
             </Button>
 
             <Grid container justifyContent="center">

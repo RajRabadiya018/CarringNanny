@@ -460,7 +460,7 @@ const NannyDetails = () => {
                         fontSize: '1.2rem'
                       }}
                     >
-                      ${nanny.hourlyRate}/hr
+                      ₹{nanny.hourlyRate}/hr
                       {nanny.verifiedNanny && (
                         <Chip 
                           icon={<VerifiedIcon fontSize="small" />} 

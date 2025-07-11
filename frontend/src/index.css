@@ -14,6 +14,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  scroll-padding-top: 70px; /* Ensures content doesn't hide behind fixed header */
 }
 
 /* Fix for mobile safari viewport issue */
@@ -21,6 +22,18 @@ body {
   .vh-100 {
     height: -webkit-fill-available;
   }
+}
+
+/* Force page to start from top when loaded */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Prevent overflow scrolling issues */
+html, body {
+  overscroll-behavior-y: none;
 }
 
 /* Global media queries */
@@ -31,14 +44,39 @@ body {
   }
   
   /* Prevent content from being hidden under navbar on mobile */
-  .MuiContainer-root:first-of-type {
-    padding-top: 70px;
+  main.MuiBox-root {
+    padding-top: 70px !important;
   }
   
   /* Remove horizontal scrolling on mobile */
   .MuiBox-root {
     max-width: 100vw;
     overflow-x: hidden;
+  }
+  
+  /* Improve button visibility on mobile */
+  .MuiButton-root {
+    margin: 8px 0;
+    min-height: 44px; /* Better touch targets */
+  }
+
+  /* Ensure menu icon is visible on mobile */
+  .MuiAppBar-root .MuiIconButton-root {
+    margin-right: 8px;
+    color: inherit;
+  }
+  
+  /* Better spacing for mobile */
+  .MuiGrid-container {
+    margin-top: 8px !important;
+  }
+  
+  /* Fix for footer causing scrolling issues */
+  footer.MuiBox-root {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    z-index: 0;
   }
 }
 
@@ -52,6 +90,11 @@ img {
 :focus {
   outline: 2px solid #9c27b0;
   outline-offset: 2px;
+}
+
+/* Make sure elements with tabIndex -1 don't show focus outline */
+[tabindex="-1"]:focus {
+  outline: none;
 }
 
 /* Improved scrollbars */
@@ -126,5 +169,10 @@ a {
   
   .card-grid {
     grid-template-columns: 1fr;
+  }
+  
+  /* For smoother navigation on mobile */
+  .MuiButtonBase-root {
+    touch-action: manipulation;
   }
 }

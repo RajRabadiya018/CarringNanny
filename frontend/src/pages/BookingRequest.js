@@ -28,7 +28,7 @@ import {
 import { DatePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import axios from 'axios';
-import { addDays, addHours, differenceInHours, format } from 'date-fns';
+import { addDays, addHours, format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -219,10 +219,12 @@ const BookingRequest = () => {
     
     // Calculate total price
     const totalPrice = calculateTotalPrice();
+    console.log(`Final calculated price for submission: ₹${totalPrice}`);
 
     try {
       const bookingData = {
         nannyId,
+        nannyName: nanny.userId?.name || 'Nanny',
         startTime: startDateTime.toISOString(),
         endTime: endDateTime.toISOString(),
         numberOfDays,
@@ -271,23 +273,60 @@ const BookingRequest = () => {
 
   // Function to calculate total price
   const calculateTotalPrice = () => {
-    if (!startTime || !endTime || !nanny) return 0;
-    
-    // Calculate duration in hours
-    const durationHours = differenceInHours(endTime, startTime);
-    if (durationHours <= 0) return 0;
-    
-    // Calculate base price (hourly rate × hours × days)
-    let price = nanny.hourlyRate * durationHours * numberOfDays;
-    
-    // Apply any service type multiplier if needed
-    if (serviceType === 'full-time') {
-      // Apply a small discount for full-time bookings
-      price = price * 0.95;
+    if (!startTime || !endTime || !nanny) {
+      console.log('calculateTotalPrice: Missing required data for calculation');
+      return 0;
     }
     
-    // Round to 2 decimal places
-    return Math.round(price * 100) / 100;
+    // Calculate duration in hours
+    const startHour = startTime.getHours() + (startTime.getMinutes() / 60);
+    const endHour = endTime.getHours() + (endTime.getMinutes() / 60);
+    
+    // Calculate hours properly accounting for times that might span across days
+    let durationHours = endHour - startHour;
+    if (durationHours < 0) {
+      durationHours += 24; // Add 24 hours if end time is on the next day
+    }
+    
+    console.log(`Duration calculation: ${startHour} to ${endHour} = ${durationHours}hrs`);
+    
+    if (durationHours <= 0) {
+      console.log('calculateTotalPrice: Duration is zero or negative');
+      return 0;
+    }
+    
+    // Make sure hourly rate is treated as a number
+    const hourlyRate = parseFloat(nanny.hourlyRate) || 0;
+    console.log(`Calculating price with: hourlyRate=${hourlyRate}, hours=${durationHours}, days=${numberOfDays}`);
+    
+    // Calculate base price (hourly rate × hours × days)
+    const basePrice = hourlyRate * durationHours * numberOfDays;
+    console.log(`Base price calculation: ${hourlyRate} × ${durationHours} × ${numberOfDays} = ${basePrice}`);
+    
+    // Apply any service type multiplier if needed
+    let finalPrice = basePrice;
+    if (serviceType === 'full-time') {
+      // Apply a small discount for full-time bookings
+      finalPrice = basePrice * 0.95;
+      console.log(`Applied full-time discount: ${basePrice} × 0.95 = ${finalPrice}`);
+    }
+    
+    // Round to 2 decimal places and ensure it's a number
+    finalPrice = Math.round(finalPrice * 100) / 100;
+    console.log(`Final calculated price: ₹${finalPrice}`);
+    
+    if (isNaN(finalPrice) || finalPrice < 0) {
+      console.warn('Invalid price calculated, defaulting to hourly rate');
+      return hourlyRate; // Return at least the hourly rate
+    }
+    
+    // Ensure we never return 0 if we have an hourly rate
+    if (finalPrice === 0 && hourlyRate > 0) {
+      console.log(`Price was 0 but hourly rate is ${hourlyRate}, returning hourly rate`);
+      return hourlyRate;
+    }
+    
+    return finalPrice;
   };
 
   if (loading) {
@@ -408,7 +447,7 @@ const BookingRequest = () => {
               </Box>
               
               <Typography variant="h6" color="primary" sx={{ mb: 2, fontWeight: 'bold' }}>
-                ${nanny.hourlyRate}/hr
+              ₹{nanny.hourlyRate}/hr
               </Typography>
               
               <Divider sx={{ mb: 2 }} />
@@ -884,7 +923,7 @@ const BookingRequest = () => {
                       Service Type: {serviceType === 'part-time' ? 'Part-time Care' : 'Full-time Care'}
                     </Typography>
                     <Typography variant="h6" color="primary.dark" sx={{ mt: 1, fontWeight: 'bold' }}>
-                      Total Price: ${calculateTotalPrice()}
+                      Total Price: ₹{calculateTotalPrice()}
                     </Typography>
                   </Grid>
                 </Grid>

@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const AuthContext = createContext();
 
@@ -11,6 +11,25 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Setup axios interceptors with the current token
+  const setupAxiosInterceptors = (token) => {
+    // Remove any existing interceptors
+    axios.interceptors.request.handlers = [];
+    
+    // Add the interceptor with the current token
+    axios.interceptors.request.use(
+      (config) => {
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+  };
+
   useEffect(() => {
     // Check if user is logged in on page load
     const checkLoggedIn = async () => {
@@ -21,6 +40,11 @@ export const AuthProvider = ({ children }) => {
           const parsedUser = JSON.parse(userInfo);
           setUser(parsedUser);
           setIsAuthenticated(true);
+          
+          // Setup axios with the token
+          if (parsedUser.token) {
+            setupAxiosInterceptors(parsedUser.token);
+          }
         }
       } catch (error) {
         console.error('Authentication check failed:', error);
@@ -44,6 +68,9 @@ export const AuthProvider = ({ children }) => {
       setUser(data);
       setIsAuthenticated(true);
       localStorage.setItem('userInfo', JSON.stringify(data));
+      
+      // Setup axios with the new token
+      setupAxiosInterceptors(data.token);
       
       return data;
     } catch (error) {
@@ -76,6 +103,9 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       localStorage.setItem('userInfo', JSON.stringify(data));
       
+      // Setup axios with the new token
+      setupAxiosInterceptors(data.token);
+      
       return data;
     } catch (error) {
       console.error('Registration error:', error);
@@ -95,12 +125,20 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('userInfo');
     setUser(null);
     setIsAuthenticated(false);
+    
+    // Clear token from axios interceptors
+    setupAxiosInterceptors(null);
   };
 
   // Update user profile
   const updateProfile = (updatedUser) => {
     setUser(updatedUser);
     localStorage.setItem('userInfo', JSON.stringify(updatedUser));
+    
+    // Update axios with the token in case it changed
+    if (updatedUser.token) {
+      setupAxiosInterceptors(updatedUser.token);
+    }
   };
 
   const value = {

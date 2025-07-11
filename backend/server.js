@@ -7,17 +7,22 @@ const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const nannyRoutes = require('./routes/nannyRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 // Express app
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Log requests
 app.use((req, res, next) => {
-  console.log(req.method, req.path);
+  console.log(`${req.method} ${req.path}`, req.headers.authorization ? 'With Auth Token' : 'No Auth Token');
   next();
 });
 
@@ -25,6 +30,13 @@ app.use((req, res, next) => {
 app.use('/api/users', userRoutes);
 app.use('/api/nannies', nannyRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/admin', adminRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  res.status(500).json({ error: 'Server error: ' + err.message });
+});
 
 // Connect to MongoDB and start server
 const startServer = async () => {

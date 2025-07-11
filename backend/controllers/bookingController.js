@@ -6,25 +6,55 @@ const mongoose = require('mongoose');
 // Get all bookings for a parent
 const getParentBookings = async (req, res) => {
   try {
+    console.log('getParentBookings called for user:', req.user._id);
+    
     // Check if user is a parent
     const user = await User.findById(req.user._id);
+    console.log('User found:', user ? `${user._id} (${user.role})` : 'No user found');
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
     if (user.role !== 'parent') {
       return res.status(403).json({ error: 'Only parents can access this resource' });
     }
 
     // Find all bookings for this parent
+    console.log('Finding bookings for parent:', req.user._id);
     const bookings = await Booking.find({ parentId: req.user._id })
-      .populate({
-        path: 'nannyId',
-        populate: {
-          path: 'userId',
-          select: 'name email phone profileImage'
-        }
-      })
+      .populate('nannyId')
       .sort({ createdAt: -1 });
-
-    res.status(200).json(bookings);
+    
+    console.log(`Found ${bookings.length} bookings`);
+    
+    // Process the bookings to include nanny user data
+    const processedBookings = await Promise.all(bookings.map(async booking => {
+      const bookingObj = booking.toObject();
+      
+      if (booking.nannyId) {
+        try {
+          // Find the nanny user data
+          const nanny = await Nanny.findById(booking.nannyId._id || booking.nannyId)
+            .populate('userId', 'name email phone profileImage');
+            
+          if (nanny && nanny.userId) {
+            bookingObj.nannyId = {
+              ...bookingObj.nannyId,
+              userId: nanny.userId
+            };
+          }
+        } catch (error) {
+          console.error('Error populating nanny user data:', error);
+        }
+      }
+      
+      return bookingObj;
+    }));
+    
+    res.status(200).json(processedBookings);
   } catch (error) {
+    console.error('Error in getParentBookings:', error);
     res.status(400).json({ error: error.message });
   }
 };
@@ -32,22 +62,24 @@ const getParentBookings = async (req, res) => {
 // Get all bookings for a nanny
 const getNannyBookings = async (req, res) => {
   try {
+    console.log('getNannyBookings called for user:', req.user._id);
+    
     // Find the nanny profile for this user
     const nanny = await Nanny.findOne({ userId: req.user._id });
     if (!nanny) {
       return res.status(404).json({ error: 'Nanny profile not found' });
     }
 
+    console.log('Finding bookings for nanny:', nanny._id);
     // Find all bookings for this nanny
     const bookings = await Booking.find({ nannyId: nanny._id })
-      .populate({
-        path: 'parentId',
-        select: 'name email phone profileImage'
-      })
+      .populate('parentId', 'name email phone profileImage')
       .sort({ createdAt: -1 });
 
+    console.log(`Found ${bookings.length} bookings`);
     res.status(200).json(bookings);
   } catch (error) {
+    console.error('Error in getNannyBookings:', error);
     res.status(400).json({ error: error.message });
   }
 };
@@ -62,30 +94,42 @@ const getBookingById = async (req, res) => {
     }
 
     const booking = await Booking.findById(id)
-      .populate({
-        path: 'nannyId',
-        populate: {
-          path: 'userId',
-          select: 'name email phone profileImage'
-        }
-      })
+      .populate('nannyId')
       .populate('parentId', 'name email phone profileImage');
 
     if (!booking) {
       return res.status(404).json({ error: 'No such booking' });
     }
 
+    // Populate the nanny user data
+    const bookingObj = booking.toObject();
+    if (booking.nannyId) {
+      const nanny = await Nanny.findById(booking.nannyId)
+        .populate('userId', 'name email phone profileImage');
+      
+      if (nanny && nanny.userId) {
+        bookingObj.nannyId = {
+          ...bookingObj.nannyId,
+          userId: nanny.userId
+        };
+      }
+    }
+
     // Verify that the requesting user is either the parent or the nanny
     const nanny = await Nanny.findById(booking.nannyId);
     if (
-      booking.parentId._id.toString() !== req.user._id.toString() &&
-      nanny.userId.toString() !== req.user._id.toString()
+      !booking.parentId || 
+      !nanny || 
+      !nanny.userId ||
+      (booking.parentId._id.toString() !== req.user._id.toString() &&
+       nanny.userId.toString() !== req.user._id.toString())
     ) {
       return res.status(403).json({ error: 'Not authorized to view this booking' });
     }
 
-    res.status(200).json(booking);
+    res.status(200).json(bookingObj);
   } catch (error) {
+    console.error('Error in getBookingById:', error);
     res.status(400).json({ error: error.message });
   }
 };
@@ -101,6 +145,7 @@ const createBooking = async (req, res) => {
 
     const {
       nannyId,
+      nannyName,
       startTime,
       endTime,
       numberOfDays,
@@ -108,7 +153,8 @@ const createBooking = async (req, res) => {
       childrenAges,
       specialRequests,
       serviceType,
-      location
+      location,
+      totalPrice: clientCalculatedPrice
     } = req.body;
 
     // Validate required fields
@@ -122,15 +168,21 @@ const createBooking = async (req, res) => {
     }
 
     // Validate service type
-    if (serviceType !== 'part-time' && serviceType !== 'full-time') {
-      return res.status(400).json({ error: 'Service type must be either part-time or full-time' });
+    if (serviceType !== 'part-time' && serviceType !== 'full-time' && serviceType !== 'babysitting') {
+      return res.status(400).json({ error: 'Service type must be part-time, full-time, or babysitting' });
     }
 
     // Check if nanny exists
-    const nanny = await Nanny.findById(nannyId);
+    const nanny = await Nanny.findById(nannyId).populate('userId', 'name');
     if (!nanny) {
       return res.status(404).json({ error: 'Nanny not found' });
     }
+
+    console.log(`Found nanny with hourly rate: ₹${nanny.hourlyRate}`);
+    
+    // Get the nanny name either from the request or from the nanny data
+    const storedNannyName = nannyName || (nanny.userId && nanny.userId.name) || 'Nanny';
+    console.log(`Using nanny name for booking: ${storedNannyName}`);
 
     // Validate time range
     const start = new Date(startTime);
@@ -145,33 +197,74 @@ const createBooking = async (req, res) => {
     }
 
     // Calculate duration in hours
-    const durationMs = end - start;
+    const startMs = start.getTime();
+    const endMs = end.getTime();
+    const durationMs = endMs - startMs;
     const durationHours = durationMs / (1000 * 60 * 60);
+    console.log(`Duration calculation: ${endMs} - ${startMs} = ${durationMs}ms = ${durationHours}hrs`);
 
     // Get number of days (default to 1 if not provided)
     const days = numberOfDays || 1;
+    console.log(`Number of days: ${days}`);
 
     // Calculate total price accounting for multiple days
-    const totalPrice = nanny.hourlyRate * durationHours * days;
+    const hourlyRate = parseFloat(nanny.hourlyRate) || 0;
+    if (hourlyRate === 0) {
+      console.error('Hourly rate is zero or invalid for nanny:', nannyId);
+    }
+    
+    let calculatedPrice = hourlyRate * durationHours * days;
+    console.log(`Base price calculation: ${hourlyRate} × ${durationHours} × ${days} = ${calculatedPrice}`);
+    
+    // Apply service type adjustments if needed
+    if (serviceType === 'full-time') {
+      // Apply a small discount for full-time bookings
+      calculatedPrice = calculatedPrice * 0.95;
+      console.log(`Applied full-time discount: ${calculatedPrice}`);
+    }
+    
+    // Round to 2 decimal places for consistency
+    calculatedPrice = parseFloat(parseFloat(calculatedPrice).toFixed(2));
+    console.log(`Calculated price after rounding: ₹${calculatedPrice}`);
+    
+    // If client sent a price use it, otherwise use our calculation
+    // Parse both as floats and round to 2 decimal places
+    let finalPrice = clientCalculatedPrice 
+      ? parseFloat(parseFloat(clientCalculatedPrice).toFixed(2)) 
+      : calculatedPrice;
+      
+    // Sanity check - never use a zero price if hourly rate is positive
+    if ((finalPrice === 0 || isNaN(finalPrice)) && hourlyRate > 0) {
+      finalPrice = hourlyRate; // Default to at least the hourly rate
+      console.log(`Final price was invalid, defaulting to hourly rate: ₹${finalPrice}`);
+    }
+    
+    console.log(`Final price to be stored: ₹${finalPrice}`);
 
-    // Create the booking
+    // Create the booking with explicit price calculation
     const booking = await Booking.create({
       parentId: req.user._id,
       nannyId,
+      nannyName: storedNannyName,
       startTime: start,
       endTime: end,
       status: 'pending',
-      totalPrice,
+      totalPrice: finalPrice,
       numberOfChildren,
       childrenAges,
       specialRequests,
       serviceType,
       numberOfDays: days,
-      location
+      location,
+      date: start
     });
+
+    // Log the created booking details
+    console.log(`Booking created with ID: ${booking._id}, Total Price: ₹${booking.totalPrice}`);
 
     res.status(201).json(booking);
   } catch (error) {
+    console.error('Error in createBooking:', error);
     res.status(400).json({ error: error.message });
   }
 };

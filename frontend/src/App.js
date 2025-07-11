@@ -1,24 +1,45 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
+import React from 'react';
+import { Navigate, Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 
 // Layout Components
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
+import Layout from './components/layout/Layout';
 
 // Pages
+import AdminDashboard from './pages/AdminDashboard';
+import BookingRequest from './pages/BookingRequest';
+import EditProfile from './pages/EditProfile';
 import Home from './pages/Home';
 import Login from './pages/Login';
-import Register from './pages/Register';
-import NannySearch from './pages/NannySearch';
-import NannyDetails from './pages/NannyDetails';
-import ParentDashboard from './pages/ParentDashboard';
 import NannyDashboard from './pages/NannyDashboard';
-import BookingRequest from './pages/BookingRequest';
+import NannyDetails from './pages/NannyDetails';
 import NannyProfileForm from './pages/NannyProfileForm';
 import NannyProfileSetup from './pages/NannyProfileSetup';
-import EditProfile from './pages/EditProfile';
+import NannySearch from './pages/NannySearch';
+import ParentDashboard from './pages/ParentDashboard';
+import Register from './pages/Register';
+
+// Scroll restoration component
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  React.useEffect(() => {
+    // Aggressive scroll to top approach
+    window.scrollTo(0, 0);
+    
+    // Additional attempt after a slight delay
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'auto'
+      });
+    }, 0);
+  }, [pathname]);
+
+  return null;
+};
 
 // Protected Route Component
 const ProtectedRoute = ({ children, requiredRole }) => {
@@ -56,84 +77,95 @@ function App() {
   return (
     <Router>
       <CssBaseline />
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/nannies" element={
-          <RestrictedRoute disallowedRole="nanny">
-            <NannySearch />
-          </RestrictedRoute>
-        } />
-        <Route path="/nannies/:nannyId" element={<NannyDetails />} />
-        
-        {/* Protected Parent Routes */}
-        <Route 
-          path="/parent/dashboard" 
-          element={
-            <ProtectedRoute requiredRole="parent">
-              <ParentDashboard />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/booking/:nannyId" 
-          element={
-            <ProtectedRoute requiredRole="parent">
-              <BookingRequest />
-            </ProtectedRoute>
-          } 
-        />
-        
-        {/* Protected Nanny Routes */}
-        <Route 
-          path="/nanny/dashboard" 
-          element={
-            <ProtectedRoute requiredRole="nanny">
-              <NannyDashboard />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/nanny/profile/setup" 
-          element={
-            <ProtectedRoute requiredRole="nanny">
-              <NannyProfileSetup />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/nanny/profile/create" 
-          element={
-            <ProtectedRoute requiredRole="nanny">
-              <NannyProfileForm />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/nanny/profile/edit/:nannyId" 
-          element={
-            <ProtectedRoute requiredRole="nanny">
-              <NannyProfileForm />
-            </ProtectedRoute>
-          } 
-        />
-        
-        {/* Common Protected Routes */}
-        <Route 
-          path="/profile/edit" 
-          element={
-            <ProtectedRoute>
-              <EditProfile />
-            </ProtectedRoute>
-          } 
-        />
-        
-        {/* Catch all route */}
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-      <Footer />
+      <ScrollToTop />
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/nannies" element={
+            <RestrictedRoute disallowedRole="nanny">
+              <NannySearch />
+            </RestrictedRoute>
+          } />
+          <Route path="/nannies/:nannyId" element={<NannyDetails />} />
+          
+          {/* Protected Parent Routes */}
+          <Route 
+            path="/parent/dashboard" 
+            element={
+              <ProtectedRoute requiredRole="parent">
+                <ParentDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/booking/:nannyId" 
+            element={
+              <ProtectedRoute requiredRole="parent">
+                <BookingRequest />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Protected Nanny Routes */}
+          <Route 
+            path="/nanny/dashboard" 
+            element={
+              <ProtectedRoute requiredRole="nanny">
+                <NannyDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/nanny/profile/setup" 
+            element={
+              <ProtectedRoute requiredRole="nanny">
+                <NannyProfileSetup />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/nanny/profile/create" 
+            element={
+              <ProtectedRoute requiredRole="nanny">
+                <NannyProfileForm />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/nanny/profile/edit/:nannyId" 
+            element={
+              <ProtectedRoute requiredRole="nanny">
+                <NannyProfileForm />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Protected Admin Routes */}
+          <Route 
+            path="/admin/dashboard" 
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Common Protected Routes */}
+          <Route 
+            path="/profile/edit" 
+            element={
+              <ProtectedRoute>
+                <EditProfile />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Catch all route */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Layout>
     </Router>
   );
 }

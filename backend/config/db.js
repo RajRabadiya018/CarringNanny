@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('../models/userModel');
 
 const connectDB = async () => {
   try {
@@ -8,7 +9,19 @@ const connectDB = async () => {
       useUnifiedTopology: true,
     });
     console.log(`MongoDB Connected: ${conn.connection.host}`);
-    return conn;
+    
+    // Create admin user if it doesn't exist
+    const adminExists = await User.findOne({ email: process.env.ADMIN_EMAIL });
+    
+    if (!adminExists) {
+      await User.signup(
+        'Admin User',
+        process.env.ADMIN_EMAIL,
+        process.env.ADMIN_PASSWORD,
+        'admin'
+      );
+      console.log('Admin user created successfully');
+    }
   } catch (error) {
     console.error(`Error connecting to MongoDB: ${error.message}`);
     process.exit(1);

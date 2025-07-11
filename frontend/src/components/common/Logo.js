@@ -46,12 +46,14 @@ const Logo = ({ size = 'medium', withText = false, sx = {} }) => {
           borderRadius: '50%',
           backgroundColor: sx.color ? 'transparent' : theme.palette.primary.main,
           color: sx.color || '#fff',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
           ...dimensions,
           ...sx,
           transition: 'all 0.3s ease',
           fontWeight: 800,
           '&:hover': {
             transform: 'scale(1.05)',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
           },
         }}
       >
@@ -62,7 +64,8 @@ const Logo = ({ size = 'medium', withText = false, sx = {} }) => {
             fontSize, 
             fontWeight: 800, 
             fontFamily: 'Nunito, sans-serif',
-            lineHeight: 1
+            lineHeight: 1,
+            textShadow: '0 1px 2px rgba(0,0,0,0.1)',
           }}
         >
           CN
@@ -77,6 +80,10 @@ const Logo = ({ size = 'medium', withText = false, sx = {} }) => {
             fontWeight: 700,
             color: sx.color || theme.palette.primary.main,
             fontSize: fontSize,
+            display: { xs: 'none', sm: 'block' },
+            '@media (max-width: 600px)': {
+              display: sx.forceShowText ? 'block' : 'none',
+            },
           }}
         >
           CarringNanny
