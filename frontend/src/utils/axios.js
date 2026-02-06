@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 // Set base URL for all axios requests
-axios.defaults.baseURL = 'http://localhost:5000';
+//axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL =
+  process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
 // Clear any existing interceptors
 if (axios.interceptors.request.handlers) {
