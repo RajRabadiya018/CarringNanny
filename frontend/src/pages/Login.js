@@ -1,19 +1,19 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {
-    Alert,
-    Box,
-    Button,
-    CircularProgress,
-    Container,
-    Grid,
-    Link,
-    Paper,
-    TextField,
-    Typography,
-    useMediaQuery,
-    useTheme,
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Grid,
+  Link,
+  Paper,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -40,7 +40,7 @@ const Login = () => {
     try {
       const userData = await login(email, password);
       console.log('Login successful:', userData);
-      
+
       // Navigate based on user role
       if (userData.role === 'admin') {
         navigate('/admin/dashboard');
@@ -58,26 +58,14 @@ const Login = () => {
     }
   };
 
-  // Admin login shortcut for testing
-  const handleAdminLogin = async () => {
-    try {
-      setEmail('admin@carringnanny.com');
-      setPassword('Admin@12345');
-      
-      const userData = await login('admin@carringnanny.com', 'Admin@12345');
-      console.log('Admin login successful:', userData);
-      navigate('/admin/dashboard');
-    } catch (error) {
-      console.error('Admin login error:', error);
-    }
-  };
+
 
   return (
-    <Container 
-      component="main" 
-      maxWidth="sm" 
-      sx={{ 
-        py: { xs: 3, sm: 6 }, 
+    <Container
+      component="main"
+      maxWidth="sm"
+      sx={{
+        py: { xs: 3, sm: 6 },
         height: '100%',
         display: 'flex',
         alignItems: 'center',
@@ -171,18 +159,7 @@ const Login = () => {
             >
               {loading ? <CircularProgress size={24} /> : 'Log In'}
             </Button>
-            
-            <Button
-              type="button"
-              fullWidth
-              variant="outlined"
-              color="secondary"
-              sx={{ mb: 2, py: 1 }}
-              onClick={handleAdminLogin}
-              disabled={loading}
-            >
-              Login as Admin
-            </Button>
+
 
             <Grid container justifyContent="center">
               <Grid item>
