@@ -1,26 +1,26 @@
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import {
-    Alert,
-    Box,
-    Button,
-    Checkbox,
-    CircularProgress,
-    Container,
-    FormControl,
-    FormControlLabel,
-    FormHelperText,
-    FormLabel,
-    Grid,
-    Link,
-    Paper,
-    Radio,
-    RadioGroup,
-    TextField,
-    Typography,
-    useMediaQuery,
-    useTheme,
+  Alert,
+  Box,
+  Button,
+  Checkbox,
+  CircularProgress,
+  Container,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+  Grid,
+  Link,
+  Paper,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import TermsAndConditions from '../components/layout/TermsAndConditions';
 import { useAuth } from '../context/AuthContext';
@@ -86,15 +86,14 @@ const Register = () => {
 
   const handleCloseTerms = () => {
     setTermsDialogOpen(false);
-    setTermsAccepted(true);
   };
 
   return (
-    <Container 
-      component="main" 
-      maxWidth="sm" 
-      sx={{ 
-        py: { xs: 3, sm: 6 }, 
+    <Container
+      component="main"
+      maxWidth="sm"
+      sx={{
+        py: { xs: 3, sm: 6 },
         height: '100%',
         display: 'flex',
         alignItems: 'center',
@@ -222,13 +221,13 @@ const Register = () => {
                   </RadioGroup>
                 </FormControl>
               </Grid>
-              
+
               {role === 'nanny' && (
                 <Grid item xs={12}>
-                  <Box sx={{ 
-                    p: 2, 
-                    bgcolor: 'primary.lighter', 
-                    borderRadius: 1, 
+                  <Box sx={{
+                    p: 2,
+                    bgcolor: 'primary.lighter',
+                    borderRadius: 1,
                     border: termsError ? '1px solid #f44336' : 'none'
                   }}>
                     <FormControlLabel
@@ -271,7 +270,7 @@ const Register = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2, py: 1.5 }}
-              disabled={loading}
+              disabled={loading || (role === 'nanny' && !termsAccepted)}
             >
               {loading ? <CircularProgress size={24} /> : 'Register'}
             </Button>

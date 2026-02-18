@@ -6,12 +6,12 @@ const Booking = require('../models/bookingModel');
 // Get all nannies with filtering
 const getNannies = async (req, res) => {
   try {
-    const { 
-      minRate, 
-      maxRate, 
-      minExperience, 
-      skills, 
-      languages, 
+    const {
+      minRate,
+      maxRate,
+      minExperience,
+      skills,
+      languages,
       specialNeeds,
       ageGroups,
       services,
@@ -56,11 +56,11 @@ const getNannies = async (req, res) => {
       try {
         const [day, startTime, endTime] = availability.split(',');
         filter['availability.day'] = day;
-        
+
         if (startTime) {
           filter['availability.startTime'] = { $lte: startTime };
         }
-        
+
         if (endTime) {
           filter['availability.endTime'] = { $gte: endTime };
         }
@@ -122,10 +122,10 @@ const getNanny = async (req, res) => {
   // If user has address but nanny doesn't have location, format and copy it
   if (nanny.userId?.address && !nanny.location) {
     const address = nanny.userId.address;
-    const formattedAddress = typeof address === 'string' 
-      ? address 
+    const formattedAddress = typeof address === 'string'
+      ? address
       : `${address.street || ''}${address.city ? ', ' + address.city : ''}${address.state ? ', ' + address.state : ''}${address.zipCode ? ' ' + address.zipCode : ''}`;
-      
+
     if (formattedAddress.trim()) {
       console.log('Copying address from user profile to nanny profile');
       nanny.location = formattedAddress;
@@ -141,18 +141,18 @@ const createNanny = async (req, res) => {
   try {
     // Check if user already has a nanny profile
     const existingNanny = await Nanny.findOne({ userId: req.user._id });
-    
+
     if (existingNanny) {
       return res.status(400).json({ error: 'You already have a nanny profile' });
     }
-    
+
     // Update user role to nanny if it's not already
     const user = await User.findById(req.user._id);
     if (user.role !== 'nanny') {
       user.role = 'nanny';
       await user.save();
     }
-    
+
     // Create nanny profile
     const {
       bio,
@@ -170,24 +170,24 @@ const createNanny = async (req, res) => {
       phoneNumber,
       location
     } = req.body;
-    
+
     // Format address from user profile if not provided
     let formattedLocation = location;
     if (!formattedLocation && user.address) {
       const address = user.address;
-      formattedLocation = typeof address === 'string' 
-        ? address 
+      formattedLocation = typeof address === 'string'
+        ? address
         : `${address.street || ''}${address.city ? ', ' + address.city : ''}${address.state ? ', ' + address.state : ''}${address.zipCode ? ' ' + address.zipCode : ''}`;
     }
-    
+
     // Use user phone if not provided
     const nannyPhone = phoneNumber || user.phone || '';
-    
+
     console.log('Creating new nanny profile with contact info:', {
       phone: nannyPhone,
       location: formattedLocation
     });
-    
+
     const nanny = await Nanny.create({
       userId: req.user._id,
       bio: bio || `Hi, I'm ${user.name}! I'm a nanny looking to provide childcare services.`,
@@ -205,7 +205,7 @@ const createNanny = async (req, res) => {
       phoneNumber: nannyPhone,
       location: formattedLocation
     });
-    
+
     res.status(201).json(nanny);
   } catch (error) {
     console.error('Error creating nanny profile:', error);
@@ -242,13 +242,13 @@ const updateNanny = async (req, res) => {
 
   // Create update object with explicit handling for location and phoneNumber
   const updateData = { ...req.body };
-  
+
   // Explicitly check and set phoneNumber and location fields
   if ('phoneNumber' in req.body) {
     console.log(`Setting phoneNumber to: ${req.body.phoneNumber}`);
     updateData.phoneNumber = req.body.phoneNumber;
   }
-  
+
   if ('location' in req.body) {
     console.log(`Setting location to: ${req.body.location}`);
     updateData.location = req.body.location;
@@ -256,8 +256,8 @@ const updateNanny = async (req, res) => {
 
   // Update the nanny profile
   const updatedNanny = await Nanny.findByIdAndUpdate(
-    id, 
-    updateData, 
+    id,
+    updateData,
     { new: true, runValidators: true }
   );
 
@@ -335,9 +335,9 @@ const addNannyReview = async (req, res) => {
     const totalRating = nanny.reviews.reduce((sum, review) => sum + review.rating, 0);
     nanny.averageRating = totalRating / nanny.reviews.length;
 
-    await nanny.save();
+    await nanny.save({ validateModifiedOnly: true });
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: 'Review added successfully',
       review: newReview,
       averageRating: nanny.averageRating
@@ -381,10 +381,10 @@ const getCurrentNannyProfile = async (req, res) => {
     // If user has address but nanny doesn't have location, format and copy it
     if (nanny.userId?.address && !nanny.location) {
       const address = nanny.userId.address;
-      const formattedAddress = typeof address === 'string' 
-        ? address 
+      const formattedAddress = typeof address === 'string'
+        ? address
         : `${address.street || ''}${address.city ? ', ' + address.city : ''}${address.state ? ', ' + address.state : ''}${address.zipCode ? ' ' + address.zipCode : ''}`;
-        
+
       if (formattedAddress.trim()) {
         console.log('Copying address from user profile to nanny profile');
         nanny.location = formattedAddress;

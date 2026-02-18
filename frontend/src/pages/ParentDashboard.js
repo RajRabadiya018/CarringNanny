@@ -12,35 +12,35 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import PersonIcon from '@mui/icons-material/Person';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import {
-    Alert,
-    AlertTitle,
-    Avatar,
-    Box,
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    Chip,
-    CircularProgress,
-    Container,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Divider,
-    Grid,
-    Paper,
-    Tab,
-    Tabs,
-    TextField,
-    Typography,
-    alpha
+  Alert,
+  AlertTitle,
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Divider,
+  Grid,
+  Paper,
+  Tab,
+  Tabs,
+  TextField,
+  Typography,
+  alpha
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { format } from 'date-fns';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ReviewDialog } from '../components/reviews';
 import { useAuth } from '../context/AuthContext';
@@ -50,18 +50,18 @@ const StatusChip = styled(Chip)(({ theme, status }) => ({
     status === 'pending'
       ? theme.palette.warning.light
       : status === 'confirmed'
-      ? theme.palette.success.light
-      : status === 'completed'
-      ? theme.palette.info.light
-      : theme.palette.error.light,
+        ? theme.palette.success.light
+        : status === 'completed'
+          ? theme.palette.info.light
+          : theme.palette.error.light,
   color:
     status === 'pending'
       ? theme.palette.warning.dark
       : status === 'confirmed'
-      ? theme.palette.success.dark
-      : status === 'completed'
-      ? theme.palette.info.dark
-      : theme.palette.error.dark,
+        ? theme.palette.success.dark
+        : status === 'completed'
+          ? theme.palette.info.dark
+          : theme.palette.error.dark,
   fontWeight: 'bold',
 }));
 
@@ -106,7 +106,7 @@ const ParentDashboard = () => {
       setBookings(data);
     } catch (error) {
       console.error('Error fetching bookings:', error);
-      
+
       // Provide more specific error messages based on error type
       if (error.response) {
         // The request was made and the server responded with a status code outside of 2xx range
@@ -163,9 +163,9 @@ const ParentDashboard = () => {
       });
 
       // Update bookings list
-      setBookings(bookings.map(booking => 
-        booking._id === cancelBookingId 
-          ? { ...booking, status: 'cancelled', cancellationReason: cancelReason } 
+      setBookings(bookings.map(booking =>
+        booking._id === cancelBookingId
+          ? { ...booking, status: 'cancelled', cancellationReason: cancelReason }
           : booking
       ));
 
@@ -208,11 +208,11 @@ const ParentDashboard = () => {
 
   if (loading) {
     return (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        minHeight: '70vh', 
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '70vh',
         flexDirection: 'column',
         gap: 2
       }}>
@@ -223,7 +223,7 @@ const ParentDashboard = () => {
   }
 
   return (
-    <Box 
+    <Box
       sx={{
         minHeight: '90vh',
         background: `linear-gradient(to bottom, ${alpha('#EDE7F6', 0.3)} 0%, rgba(255,255,255,0) 100%)`,
@@ -234,12 +234,12 @@ const ParentDashboard = () => {
       <Container maxWidth="lg">
         {/* Dashboard Header */}
         <Box sx={{ mb: 5 }}>
-          <Typography 
-            variant="h3" 
-            component="h1" 
-            fontWeight="bold" 
+          <Typography
+            variant="h3"
+            component="h1"
+            fontWeight="bold"
             gutterBottom
-            sx={{ 
+            sx={{
               position: 'relative',
               display: 'inline-block',
               '&:after': {
@@ -262,9 +262,9 @@ const ParentDashboard = () => {
         </Box>
 
         {error && (
-          <Alert 
-            severity="error" 
-            sx={{ 
+          <Alert
+            severity="error"
+            sx={{
               mb: 4,
               borderRadius: 2,
               boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
@@ -277,10 +277,10 @@ const ParentDashboard = () => {
         {/* Stats Overview */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid item xs={12} sm={6} md={3}>
-            <Paper 
+            <Paper
               elevation={0}
-              sx={{ 
-                p: 3, 
+              sx={{
+                p: 3,
                 textAlign: 'center',
                 height: '100%',
                 borderRadius: 3,
@@ -312,10 +312,10 @@ const ParentDashboard = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Paper 
+            <Paper
               elevation={0}
-              sx={{ 
-                p: 3, 
+              sx={{
+                p: 3,
                 textAlign: 'center',
                 height: '100%',
                 borderRadius: 3,
@@ -347,10 +347,10 @@ const ParentDashboard = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Paper 
+            <Paper
               elevation={0}
-              sx={{ 
-                p: 3, 
+              sx={{
+                p: 3,
                 textAlign: 'center',
                 height: '100%',
                 borderRadius: 3,
@@ -382,10 +382,10 @@ const ParentDashboard = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Paper 
+            <Paper
               elevation={0}
-              sx={{ 
-                p: 3, 
+              sx={{
+                p: 3,
                 textAlign: 'center',
                 height: '100%',
                 borderRadius: 3,
@@ -419,10 +419,10 @@ const ParentDashboard = () => {
         </Grid>
 
         {/* Tabs & Bookings */}
-        <Paper 
-          sx={{ 
-            width: '100%', 
-            mb: 3, 
+        <Paper
+          sx={{
+            width: '100%',
+            mb: 3,
             overflow: 'hidden',
             borderRadius: 3,
             boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
@@ -447,54 +447,54 @@ const ParentDashboard = () => {
               }
             }}
           >
-            <Tab 
-              label="Active Bookings" 
-              icon={<EventAvailableIcon />} 
+            <Tab
+              label="Active Bookings"
+              icon={<EventAvailableIcon />}
               iconPosition="start"
             />
-            <Tab 
-              label="Past Bookings" 
-              icon={<HistoryIcon />} 
+            <Tab
+              label="Past Bookings"
+              icon={<HistoryIcon />}
               iconPosition="start"
             />
-            <Tab 
-              label="All Bookings" 
-              icon={<ListAltIcon />} 
+            <Tab
+              label="All Bookings"
+              icon={<ListAltIcon />}
               iconPosition="start"
             />
           </Tabs>
 
           <TabPanel value={tabValue} index={0}>
-            <BookingsList 
-              bookings={getFilteredBookings('active')} 
-              onCancelClick={handleCancelClick} 
-              onReviewClick={handleReviewClick} 
+            <BookingsList
+              bookings={getFilteredBookings('active')}
+              onCancelClick={handleCancelClick}
+              onReviewClick={handleReviewClick}
               emptyMessage="You don't have any active bookings."
             />
           </TabPanel>
 
           <TabPanel value={tabValue} index={1}>
-            <BookingsList 
-              bookings={getFilteredBookings('past')} 
-              onCancelClick={handleCancelClick} 
-              onReviewClick={handleReviewClick} 
+            <BookingsList
+              bookings={getFilteredBookings('past')}
+              onCancelClick={handleCancelClick}
+              onReviewClick={handleReviewClick}
               emptyMessage="You don't have any past bookings."
             />
           </TabPanel>
 
           <TabPanel value={tabValue} index={2}>
-            <BookingsList 
-              bookings={bookings} 
-              onCancelClick={handleCancelClick} 
-              onReviewClick={handleReviewClick} 
+            <BookingsList
+              bookings={bookings}
+              onCancelClick={handleCancelClick}
+              onReviewClick={handleReviewClick}
               emptyMessage="You don't have any bookings yet."
             />
           </TabPanel>
         </Paper>
 
         {/* Cancel Booking Dialog */}
-        <Dialog 
-          open={cancelDialogOpen} 
+        <Dialog
+          open={cancelDialogOpen}
           onClose={handleCancelClose}
           PaperProps={{
             sx: {
@@ -528,16 +528,16 @@ const ParentDashboard = () => {
             />
           </DialogContent>
           <DialogActions sx={{ px: 3, pb: 3 }}>
-            <Button 
+            <Button
               onClick={handleCancelClose}
               variant="outlined"
               sx={{ borderRadius: 2, px: 3 }}
             >
               Back
             </Button>
-            <Button 
-              onClick={handleCancelConfirm} 
-              color="error" 
+            <Button
+              onClick={handleCancelConfirm}
+              color="error"
               variant="contained"
               sx={{ borderRadius: 2, px: 3 }}
             >
@@ -568,7 +568,7 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
         <Box
           sx={{
             width: '200px',
-            height: '200px', 
+            height: '200px',
             mx: 'auto',
             mb: 2,
             display: 'flex',
@@ -581,9 +581,9 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
         >
           <EventBusyIcon sx={{ fontSize: 80, opacity: 0.7 }} />
         </Box>
-        <Alert 
-          severity="info" 
-          sx={{ 
+        <Alert
+          severity="info"
+          sx={{
             display: 'inline-flex',
             borderRadius: 2,
             boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
@@ -602,8 +602,8 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
       <Grid container spacing={3}>
         {bookings.map((booking) => (
           <Grid item xs={12} key={booking._id}>
-            <Card 
-              sx={{ 
+            <Card
+              sx={{
                 borderRadius: 3,
                 transition: 'all 0.3s ease',
                 overflow: 'hidden',
@@ -617,18 +617,18 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
                 <Grid container spacing={2}>
                   {/* Nanny Info */}
                   <Grid item xs={12} sm={3}>
-                    <Box sx={{ 
-                      display: 'flex', 
-                      flexDirection: 'column', 
+                    <Box sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
                       alignItems: 'center',
                       position: 'relative'
                     }}>
                       <Avatar
                         src={booking.nannyId?.userId?.profileImage}
                         alt={booking.nannyName || booking.nannyId?.userId?.name || 'Nanny'}
-                        sx={{ 
-                          width: 100, 
-                          height: 100, 
+                        sx={{
+                          width: 100,
+                          height: 100,
                           mb: 1.5,
                           boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                           border: '4px solid white'
@@ -637,10 +637,10 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
                       <Typography variant="h6" fontWeight="bold" align="center">
                         {booking.nannyName || booking.nannyId?.userId?.name || 'Nanny'}
                       </Typography>
-                      <Typography 
-                        variant="body1" 
-                        sx={{ 
-                          color: 'primary.main', 
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: 'primary.main',
                           fontWeight: 'bold',
                           bgcolor: 'customColors.lightPurple',
                           px: 2,
@@ -648,7 +648,7 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
                           borderRadius: 5,
                           mt: 0.5,
                           fontSize: '0.9rem'
-                        }} 
+                        }}
                         align="center"
                       >
                         ${booking.nannyId?.hourlyRate}/hour
@@ -699,7 +699,7 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <PaymentIcon sx={{ color: 'primary.main', mr: 1.5, fontSize: '1.3rem' }} />
                         <Typography variant="body1" fontWeight="bold" sx={{ color: 'primary.main' }}>
-                          Total: ₹{booking.totalPrice > 0 ? booking.totalPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : (booking.nannyId?.hourlyRate || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                          Total: ₹{booking.totalPrice > 0 ? booking.totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : (booking.nannyId?.hourlyRate || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </Typography>
                       </Box>
                     </Paper>
@@ -707,11 +707,11 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
 
                   {/* Status and Actions */}
                   <Grid item xs={12} sm={3}>
-                    <Box sx={{ 
-                      display: 'flex', 
-                      flexDirection: 'column', 
-                      alignItems: 'flex-end', 
-                      height: '100%', 
+                    <Box sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-end',
+                      height: '100%',
                       justifyContent: 'space-between',
                       p: 1
                     }}>
@@ -762,15 +762,15 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
                     </Paper>
                   </Box>
                 )}
-                
+
                 {booking.status === 'confirmed' && (
                   <Box sx={{ mt: 2 }}>
                     <Divider sx={{ my: 2 }} />
-                    <Alert 
-                      severity="success" 
-                      icon={<CheckCircleIcon fontSize="inherit" />} 
-                      sx={{ 
-                        mb: 1, 
+                    <Alert
+                      severity="success"
+                      icon={<CheckCircleIcon fontSize="inherit" />}
+                      sx={{
+                        mb: 1,
                         borderRadius: 2,
                         boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
                       }}
@@ -787,15 +787,15 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
                     </Alert>
                   </Box>
                 )}
-                
+
                 {booking.status === 'cancelled' && booking.nannyMessage && (
                   <Box sx={{ mt: 2 }}>
                     <Divider sx={{ my: 2 }} />
-                    <Alert 
-                      severity="error" 
+                    <Alert
+                      severity="error"
                       icon={<CancelIcon fontSize="inherit" />}
-                      sx={{ 
-                        mb: 1, 
+                      sx={{
+                        mb: 1,
                         borderRadius: 2,
                         boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
                       }}
@@ -822,8 +822,8 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
                     color="error"
                     onClick={() => onCancelClick(booking._id)}
                     startIcon={<CancelIcon />}
-                    sx={{ 
-                      borderRadius: 6, 
+                    sx={{
+                      borderRadius: 6,
                       mr: 1,
                       px: 2
                     }}
@@ -838,8 +838,8 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
                     color="primary"
                     onClick={() => onReviewClick(booking)}
                     startIcon={<RateReviewIcon />}
-                    sx={{ 
-                      borderRadius: 6, 
+                    sx={{
+                      borderRadius: 6,
                       mr: 1,
                       px: 2
                     }}
@@ -853,7 +853,7 @@ const BookingsList = ({ bookings, onCancelClick, onReviewClick, emptyMessage }) 
                   color="secondary"
                   startIcon={<PersonIcon />}
                   onClick={() => window.location.href = `/nannies/${booking.nannyId._id}`}
-                  sx={{ 
+                  sx={{
                     borderRadius: 6,
                     px: 2
                   }}

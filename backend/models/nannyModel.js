@@ -91,11 +91,11 @@ const nannySchema = new mongoose.Schema({
   },
   ageGroupsServed: [{
     type: String,
-    enum: ['Infant', 'Toddler', 'Preschool', 'School-age', 'Teenager']
+    enum: ['Infant (0-1)', 'Toddler (1-3)', 'Preschool (3-5)', 'School-age (5-12)', 'Teenager (13-18)']
   }],
   servicesOffered: [{
     type: String,
-    enum: ['Babysitting', 'Full-time care', 'Part-time care', 'Overnight care', 'Homework help', 'Cooking', 'Light housekeeping', 'Transportation']
+    enum: ['Babysitting', 'Full-time care', 'Part-time care', 'Overnight care', 'Homework help', 'Cooking', 'Light housekeeping', 'Transportation', 'School pickup/dropoff', 'Weekend care']
   }],
   phoneNumber: {
     type: String
@@ -108,7 +108,7 @@ const nannySchema = new mongoose.Schema({
 });
 
 // Calculate average rating when a review is added or modified
-nannySchema.pre('save', function(next) {
+nannySchema.pre('save', function (next) {
   if (this.reviews && this.reviews.length > 0) {
     const totalRating = this.reviews.reduce((sum, review) => sum + review.rating, 0);
     this.averageRating = totalRating / this.reviews.length;

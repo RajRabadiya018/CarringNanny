@@ -7,29 +7,29 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
 import {
-    AppBar,
-    Avatar,
-    Box,
-    Button,
-    Chip,
-    Container,
-    Divider,
-    Drawer,
-    IconButton,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Menu,
-    MenuItem,
-    Toolbar,
-    Tooltip,
-    Typography,
-    useMediaQuery,
-    useTheme
+  AppBar,
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Container,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Logo from '../common/Logo';
@@ -40,10 +40,10 @@ const Navbar = ({ container }) => {
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
+
   // Reference to container element for the drawer
   const containerRef = container !== undefined ? container : window.document.body;
-  
+
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -87,12 +87,12 @@ const Navbar = ({ container }) => {
     if (path === '/') {
       return location.pathname === path;
     }
-    
+
     // Handle dashboard paths specially to ensure correct highlighting
     if (path.includes('/dashboard')) {
       return location.pathname.includes(path);
     }
-    
+
     return location.pathname.startsWith(path);
   };
 
@@ -103,12 +103,16 @@ const Navbar = ({ container }) => {
         path: '/',
         icon: <HomeIcon />,
       },
-      {
+    ];
+
+    // Only show "Find Nannies" for non-nanny users (parents, admins, or not logged in)
+    if (!user || user.role !== 'nanny') {
+      navItems.push({
         name: 'Find Nannies',
         path: '/nannies',
         icon: <ChildCareIcon />,
-      }
-    ];
+      });
+    }
 
     // Add dashboard based on user role - only add one dashboard entry
     if (user) {
@@ -142,37 +146,37 @@ const Navbar = ({ container }) => {
   // Define separate menu items only shown in user menu
   const userMenuItems = isAuthenticated
     ? [
-        {
-          title: 'Edit Profile',
-          path: '/profile/edit',
-          onClick: handleCloseUserMenu,
-          icon: <PersonIcon fontSize="small" />
-        },
-        {
-          title: 'Logout',
-          onClick: handleLogout,
-          icon: <LogoutIcon fontSize="small" />
-        },
-      ]
+      {
+        title: 'Edit Profile',
+        path: '/profile/edit',
+        onClick: handleCloseUserMenu,
+        icon: <PersonIcon fontSize="small" />
+      },
+      {
+        title: 'Logout',
+        onClick: handleLogout,
+        icon: <LogoutIcon fontSize="small" />
+      },
+    ]
     : [
-        {
-          title: 'Login',
-          path: '/login',
-          onClick: handleCloseUserMenu,
-          icon: <PersonIcon fontSize="small" />
-        },
-        {
-          title: 'Register',
-          path: '/register',
-          onClick: handleCloseUserMenu,
-          icon: <PersonIcon fontSize="small" />
-        },
-      ];
+      {
+        title: 'Login',
+        path: '/login',
+        onClick: handleCloseUserMenu,
+        icon: <PersonIcon fontSize="small" />
+      },
+      {
+        title: 'Register',
+        path: '/register',
+        onClick: handleCloseUserMenu,
+        icon: <PersonIcon fontSize="small" />
+      },
+    ];
 
   // Get role-specific styling for indication
   const getRoleStyles = () => {
     if (!isAuthenticated) return {};
-    
+
     if (user?.role === 'parent') {
       return {
         roleColor: theme.palette.secondary.main,
@@ -205,7 +209,7 @@ const Navbar = ({ container }) => {
       <Divider sx={{ mb: 2 }} />
       <List>
         {getNavItems().map((item) => (
-          <ListItem 
+          <ListItem
             key={item.name}
             disablePadding
             sx={{ mb: 1 }}
@@ -226,14 +230,14 @@ const Navbar = ({ container }) => {
                 }
               }}
             >
-              <ListItemIcon sx={{ 
+              <ListItemIcon sx={{
                 color: location.pathname === item.path ? theme.palette.primary.main : 'inherit',
                 minWidth: '40px'
               }}>
                 {item.icon}
               </ListItemIcon>
-              <ListItemText 
-                primary={item.name} 
+              <ListItemText
+                primary={item.name}
                 primaryTypographyProps={{
                   fontWeight: location.pathname === item.path ? 700 : 500,
                   color: location.pathname === item.path ? theme.palette.primary.main : 'inherit'
@@ -251,9 +255,9 @@ const Navbar = ({ container }) => {
               <Avatar
                 src={user.profilePicture}
                 alt={user.name}
-                sx={{ 
-                  mr: 2, 
-                  width: 40, 
+                sx={{
+                  mr: 2,
+                  width: 40,
                   height: 40,
                   border: `2px solid ${roleStyles.roleColor}`,
                 }}
@@ -314,8 +318,8 @@ const Navbar = ({ container }) => {
 
   return (
     <>
-      <AppBar 
-        position="fixed" 
+      <AppBar
+        position="fixed"
         elevation={scrolled ? 2 : 0}
         sx={{
           bgcolor: scrolled ? 'white' : 'primary.main',
@@ -325,10 +329,10 @@ const Navbar = ({ container }) => {
         }}
       >
         <Container maxWidth="lg">
-          <Toolbar 
-            disableGutters 
-            sx={{ 
-              height: { xs: '56px', md: '70px' }, 
+          <Toolbar
+            disableGutters
+            sx={{
+              height: { xs: '56px', md: '70px' },
               minHeight: { xs: '56px', md: '70px' },
               px: { xs: 1, sm: 2 }
             }}
@@ -339,8 +343,8 @@ const Navbar = ({ container }) => {
               aria-label="open drawer"
               edge="start"
               onClick={handleDrawerToggle}
-              sx={{ 
-                mr: 2, 
+              sx={{
+                mr: 2,
                 display: { xs: 'flex', md: 'none' },
                 backgroundColor: scrolled ? 'transparent' : 'rgba(255, 255, 255, 0.15)',
                 '&:hover': {
@@ -350,20 +354,20 @@ const Navbar = ({ container }) => {
             >
               <MenuIcon />
             </IconButton>
-            
+
             {/* Logo */}
             <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: { xs: 1, md: 0 } }}>
-              <Logo 
-                size={isMobile ? 'small' : 'medium'} 
-                withText={!isMobile} 
-                sx={{ 
+              <Logo
+                size={isMobile ? 'small' : 'medium'}
+                withText={!isMobile}
+                sx={{
                   color: scrolled ? theme.palette.primary.main : '#fff',
                   display: 'flex',
                   mr: { xs: 0, md: 3 },
                 }}
               />
             </Box>
-            
+
             {/* Desktop Navigation */}
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, ml: 2 }}>
               {navItems.map((page) => (
@@ -372,7 +376,7 @@ const Navbar = ({ container }) => {
                   component={RouterLink}
                   to={page.path}
                   sx={{
-                    my: 2, 
+                    my: 2,
                     mx: 1,
                     display: 'flex',
                     alignItems: 'center',
@@ -492,8 +496,8 @@ const Navbar = ({ container }) => {
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
               width: { xs: '85%', sm: 300 },
               borderRadius: '0 20px 20px 0',
               boxShadow: '0 16px 32px rgba(0, 0, 0, 0.1)',
@@ -543,8 +547,8 @@ const Navbar = ({ container }) => {
             label={roleStyles.roleName}
             size="small"
             icon={roleStyles.roleIcon}
-            sx={{ 
-              mt: 1, 
+            sx={{
+              mt: 1,
               bgcolor: 'rgba(126, 87, 194, 0.1)',
               color: roleStyles.roleColor,
               fontWeight: 'bold',
@@ -557,7 +561,7 @@ const Navbar = ({ container }) => {
         <Divider sx={{ my: 1 }} />
         {/* Different menu items */}
         {userMenuItems.map((item) => (
-          <MenuItem 
+          <MenuItem
             key={item.title}
             onClick={() => {
               handleCloseUserMenu();

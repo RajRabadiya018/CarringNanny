@@ -28,7 +28,7 @@ import {
   Typography
 } from '@mui/material';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -39,7 +39,7 @@ const NannySearch = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
-    minRate: 1000,
+    minRate: 0,
     maxRate: 10000,
     minExperience: 0,
     minRating: 0,
@@ -78,11 +78,11 @@ const NannySearch = () => {
   ];
 
   const ageGroupOptions = [
-    'Infant',
-    'Toddler',
-    'Preschool',
-    'School-age',
-    'Teenager',
+    'Infant (0-1)',
+    'Toddler (1-3)',
+    'Preschool (3-5)',
+    'School-age (5-12)',
+    'Teenager (13-18)',
   ];
 
   const serviceOptions = [
@@ -122,27 +122,27 @@ const NannySearch = () => {
     const applyFilters = async () => {
       try {
         setLoading(true);
-        
+
         // Build query parameters for all filters
         const params = {};
-        
+
         // Always include rate range filters
         params.minRate = filters.minRate;
         params.maxRate = filters.maxRate;
-        
+
         // Add other filters only if they have values
         if (filters.minExperience > 0) params.minExperience = filters.minExperience;
         if (filters.minRating > 0) params.minRating = filters.minRating;
-        
+
         // Add array filters if they have any selected items
         if (filters.skills.length > 0) params.skills = filters.skills.join(',');
         if (filters.languages.length > 0) params.languages = filters.languages.join(',');
         if (filters.ageGroups.length > 0) params.ageGroups = filters.ageGroups.join(',');
         if (filters.services.length > 0) params.services = filters.services.join(',');
-        
+
         // Add boolean filters
         if (filters.specialNeeds) params.specialNeeds = true;
-        
+
         console.log('Applying filters with params:', params);
 
         const { data } = await axios.get('/api/nannies', { params });
@@ -181,7 +181,7 @@ const NannySearch = () => {
     console.log("Manually applying current filters:", filters);
     // The useEffect will handle the actual API call
     // This is just to provide visual feedback
-    
+
     // Scroll to the top of the results
     window.scrollTo({
       top: 0,
@@ -192,7 +192,7 @@ const NannySearch = () => {
   const handleResetFilters = () => {
     console.log("Resetting all filters");
     setFilters({
-      minRate: 10,
+      minRate: 0,
       maxRate: 50,
       minExperience: 0,
       minRating: 0,
@@ -220,13 +220,13 @@ const NannySearch = () => {
   });
 
   return (
-    <Container maxWidth="xl" sx={{ 
+    <Container maxWidth="xl" sx={{
       py: 4,
       pt: { xs: 4, sm: 5, md: 6 }, // Increased top padding
       mt: { xs: 3, sm: 4, md: 5 } // Significantly increased margin top
     }}>
       <Box sx={{ mb: 5 }}> {/* Added a wrapper Box with more bottom margin */}
-        <Typography variant="h4" component="h1" fontWeight="bold" sx={{ 
+        <Typography variant="h4" component="h1" fontWeight="bold" sx={{
           mb: 2, // Increased space between heading and subheading
           fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
           letterSpacing: '-0.5px' // Added slight letter spacing for cleaner text
@@ -238,8 +238,8 @@ const NannySearch = () => {
         </Typography>
       </Box>
 
-      <Box sx={{ 
-        display: 'flex', 
+      <Box sx={{
+        display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         mb: 3,
@@ -249,7 +249,7 @@ const NannySearch = () => {
           variant="outlined"
           color="inherit"
           startIcon={<FilterListIcon />}
-          sx={{ 
+          sx={{
             borderColor: 'rgba(0, 0, 0, 0.12)',
             color: 'text.secondary',
             px: 2,
@@ -266,7 +266,7 @@ const NannySearch = () => {
         >
           Filters
         </Button>
-        
+
         <Typography variant="body2" color="text.secondary">
           {nannies.length} nannies found
         </Typography>
@@ -277,24 +277,24 @@ const NannySearch = () => {
         <Grid item xs={12} md={3}>
           <Paper sx={{ p: 3, position: 'sticky', top: 20 }}>
             <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-              <FilterListIcon sx={{ mr: 1 }} /> 
+              <FilterListIcon sx={{ mr: 1 }} />
               Filters
-              {(filters.minRate !== 1000 || 
-                filters.maxRate !== 10000 || 
-                filters.minExperience !== 0 || 
-                filters.minRating !== 0 || 
-                filters.skills.length > 0 || 
-                filters.languages.length > 0 || 
-                filters.specialNeeds !== false || 
-                filters.ageGroups.length > 0 || 
+              {(filters.minRate !== 1000 ||
+                filters.maxRate !== 10000 ||
+                filters.minExperience !== 0 ||
+                filters.minRating !== 0 ||
+                filters.skills.length > 0 ||
+                filters.languages.length > 0 ||
+                filters.specialNeeds !== false ||
+                filters.ageGroups.length > 0 ||
                 filters.services.length > 0) && (
-                <Chip 
-                  size="small" 
-                  color="primary" 
-                  label="Active" 
-                  sx={{ ml: 1 }} 
-                />
-              )}
+                  <Chip
+                    size="small"
+                    color="primary"
+                    label="Active"
+                    sx={{ ml: 1 }}
+                  />
+                )}
             </Typography>
 
             <Accordion defaultExpanded elevation={0} sx={{ mb: 2 }}>
@@ -303,7 +303,7 @@ const NannySearch = () => {
               </AccordionSummary>
               <AccordionDetails>
                 <Typography variant="body2" gutterBottom>
-                ₹{filters.minRate} - ₹{filters.maxRate} per hour
+                  ₹{filters.minRate} - ₹{filters.maxRate} per hour
                 </Typography>
                 <Slider
                   value={[filters.minRate, filters.maxRate]}
@@ -311,7 +311,7 @@ const NannySearch = () => {
                     handleFilterChange('minRate', newValue[0]);
                     handleFilterChange('maxRate', newValue[1]);
                   }}
-                  min={1000}
+                  min={0}
                   max={10000}
                   step={5}
                   valueLabelDisplay="auto"
@@ -481,7 +481,7 @@ const NannySearch = () => {
             >
               Reset Filters
             </Button>
-            
+
             <Button
               variant="contained"
               fullWidth
@@ -538,22 +538,22 @@ const NannySearch = () => {
                 <Typography variant="subtitle1">
                   Found {filteredNannies.length} nannies
                 </Typography>
-                {(filters.minRate !== 10 || 
-                  filters.maxRate !== 50 || 
-                  filters.minExperience !== 0 || 
-                  filters.minRating !== 0 || 
-                  filters.skills.length > 0 || 
-                  filters.languages.length > 0 || 
-                  filters.specialNeeds !== false || 
-                  filters.ageGroups.length > 0 || 
+                {(filters.minRate !== 10 ||
+                  filters.maxRate !== 50 ||
+                  filters.minExperience !== 0 ||
+                  filters.minRating !== 0 ||
+                  filters.skills.length > 0 ||
+                  filters.languages.length > 0 ||
+                  filters.specialNeeds !== false ||
+                  filters.ageGroups.length > 0 ||
                   filters.services.length > 0) && (
-                  <Chip 
-                    size="small" 
-                    label="Filtered Results" 
-                    color="secondary" 
-                    sx={{ ml: 1 }} 
-                  />
-                )}
+                    <Chip
+                      size="small"
+                      label="Filtered Results"
+                      color="secondary"
+                      sx={{ ml: 1 }}
+                    />
+                  )}
               </Box>
               <Grid container spacing={3}>
                 {filteredNannies.map((nanny) => (
@@ -573,7 +573,7 @@ const NannySearch = () => {
                         },
                       }}
                     >
-                      <Box sx={{ 
+                      <Box sx={{
                         position: 'relative',
                         height: 160,
                         width: '100%',
@@ -595,10 +595,10 @@ const NannySearch = () => {
                             }}
                           />
                         ) : (
-                          <Typography 
-                            variant="h2" 
-                            component="div" 
-                            sx={{ 
+                          <Typography
+                            variant="h2"
+                            component="div"
+                            sx={{
                               fontWeight: 'bold',
                               color: 'rgba(0,0,0,0.7)'
                             }}
@@ -613,7 +613,7 @@ const NannySearch = () => {
                             {nanny.userId?.name || 'Nanny'}
                           </Typography>
                           <Typography variant="body2" color="primary" fontWeight="bold">
-                          ₹{nanny.hourlyRate}/hr
+                            ₹{nanny.hourlyRate}/hr
                           </Typography>
                         </Box>
 
@@ -655,7 +655,7 @@ const NannySearch = () => {
                           >
                             View Profile
                           </Button>
-                          
+
                           {isAuthenticated && user.role === 'parent' && (
                             <Button
                               variant="outlined"

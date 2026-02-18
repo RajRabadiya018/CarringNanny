@@ -7,43 +7,34 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-import EmailIcon from '@mui/icons-material/Email';
-import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PaymentIcon from '@mui/icons-material/Payment';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import PersonIcon from '@mui/icons-material/Person';
-import PhoneIcon from '@mui/icons-material/Phone';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import WorkIcon from '@mui/icons-material/Work';
 import {
-    Alert,
-    Avatar,
-    Box,
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    Chip,
-    CircularProgress,
-    Container,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Divider,
-    Grid,
-    Paper,
-    Tab,
-    Tabs,
-    TextField,
-    Typography
+  Alert,
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Paper,
+  Tab,
+  Tabs,
+  TextField,
+  Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
-import { format } from 'date-fns';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -52,18 +43,18 @@ const StatusChip = styled(Chip)(({ theme, status }) => ({
     status === 'pending'
       ? theme.palette.warning.light
       : status === 'confirmed'
-      ? '#EDE7F6'
-      : status === 'completed'
-      ? '#E8EAF6'
-      : theme.palette.error.light,
+        ? '#EDE7F6'
+        : status === 'completed'
+          ? '#E8EAF6'
+          : theme.palette.error.light,
   color:
     status === 'pending'
       ? theme.palette.warning.dark
       : status === 'confirmed'
-      ? '#6a1b9a'
-      : status === 'completed'
-      ? '#3f51b5'
-      : theme.palette.error.dark,
+        ? '#6a1b9a'
+        : status === 'completed'
+          ? '#3f51b5'
+          : theme.palette.error.dark,
   fontWeight: 'bold',
 }));
 
@@ -153,30 +144,30 @@ const NannyDashboard = () => {
     try {
       // Use different endpoints based on action type
       const action = responseAction === 'accept' ? 'direct-accept' : 'decline';
-      
+
       const requestData = {
         message: responseMessage || ''  // Ensure message is never undefined
       };
-      
+
       console.log(`Sending ${action} request:`, {
         bookingId: responseBookingId,
         action: action,
         requestUrl: `/api/bookings/${responseBookingId}/${action}`,
         data: requestData
       });
-      
+
       try {
         const response = await axios.put(`/api/bookings/${responseBookingId}/${action}`, requestData);
         console.log(`${action} response:`, response.data);
-        
+
         // Update the UI immediately after successful API call
-        setBookings(bookings.map(booking => 
-          booking._id === responseBookingId 
-            ? { 
-                ...booking, 
-                status: responseAction === 'accept' ? 'confirmed' : 'cancelled',
-                nannyMessage: responseMessage || '' 
-              } 
+        setBookings(bookings.map(booking =>
+          booking._id === responseBookingId
+            ? {
+              ...booking,
+              status: responseAction === 'accept' ? 'confirmed' : 'cancelled',
+              nannyMessage: responseMessage || ''
+            }
             : booking
         ));
 
@@ -191,14 +182,14 @@ const NannyDashboard = () => {
           statusText: axiosError.response?.statusText,
           responseData: axiosError.response?.data
         });
-        
+
         let errorMessage = `Failed to ${responseAction} booking. Please try again.`;
-        
+
         // Extract more specific error message if available
         if (axiosError.response && axiosError.response.data && axiosError.response.data.error) {
           errorMessage = `Failed to ${responseAction} booking: ${axiosError.response.data.error}`;
         }
-        
+
         setError(errorMessage);
       }
     } catch (generalError) {
@@ -219,19 +210,19 @@ const NannyDashboard = () => {
   };
 
   const handleCompleteConfirm = async () => {
-    try {      
+    try {
       await axios.put(`/api/bookings/${completeBookingId}/complete`, {
         completionNotes: completeNotes,
       });
 
       // Update bookings list
-      setBookings(bookings.map(booking => 
-        booking._id === completeBookingId 
-          ? { 
-              ...booking, 
-              status: 'completed',
-              completionNotes: completeNotes 
-            } 
+      setBookings(bookings.map(booking =>
+        booking._id === completeBookingId
+          ? {
+            ...booking,
+            status: 'completed',
+            completionNotes: completeNotes
+          }
           : booking
       ));
 
@@ -255,20 +246,20 @@ const NannyDashboard = () => {
 
   // Function to render booking lists
   const renderBookingsList = (status) => {
-    const filteredBookings = status === 'confirmed' 
-      ? getFilteredBookings('upcoming') 
-      : status === 'completed' 
+    const filteredBookings = status === 'confirmed'
+      ? getFilteredBookings('upcoming')
+      : status === 'completed'
         ? getFilteredBookings('past')
         : status === 'cancelled'
           ? bookings.filter(booking => booking.status === 'cancelled')
           : getFilteredBookings('pending');
-          
+
     if (filteredBookings.length === 0) {
       return (
         <Box sx={{ p: 4, textAlign: 'center' }}>
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
             alignItems: 'center',
             mb: 3
           }}>
@@ -297,13 +288,13 @@ const NannyDashboard = () => {
         </Box>
       );
     }
-    
+
     return (
       <Box sx={{ p: { xs: 2, md: 3 } }}>
         <Grid container spacing={3}>
           {filteredBookings.map((booking) => (
             <Grid item xs={12} md={6} lg={4} key={booking._id}>
-              <Paper 
+              <Paper
                 elevation={1}
                 sx={{
                   p: 3,
@@ -317,16 +308,16 @@ const NannyDashboard = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <Avatar
                     src={booking.parent?.profilePicture || booking.parentId?.profilePicture}
-                    alt={(booking.parent?.firstName && booking.parent?.lastName) ? 
-                         `${booking.parent.firstName} ${booking.parent.lastName}` : 
-                         booking.parentId?.name || "Parent"}
+                    alt={(booking.parent?.firstName && booking.parent?.lastName) ?
+                      `${booking.parent.firstName} ${booking.parent.lastName}` :
+                      booking.parentId?.name || "Parent"}
                     sx={{ width: 48, height: 48, mr: 2 }}
                   />
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="h6" component="h3" fontWeight={500}>
-                      {(booking.parent?.firstName && booking.parent?.lastName) ? 
-                       `${booking.parent.firstName} ${booking.parent.lastName}` : 
-                       booking.parent?.fullName || booking.parentId?.name || "Parent"}
+                      {(booking.parent?.firstName && booking.parent?.lastName) ?
+                        `${booking.parent.firstName} ${booking.parent.lastName}` :
+                        booking.parent?.fullName || booking.parentId?.name || "Parent"}
                     </Typography>
                   </Box>
                   <Box
@@ -344,26 +335,26 @@ const NannyDashboard = () => {
                     {booking.status}
                   </Box>
                 </Box>
-                
+
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <CalendarMonthIcon 
-                    sx={{ color: 'text.secondary', fontSize: '1rem', mr: 1 }} 
+                  <CalendarMonthIcon
+                    sx={{ color: 'text.secondary', fontSize: '1rem', mr: 1 }}
                   />
                   <Typography variant="body2" color="text.secondary">
                     {new Date(booking.startTime).toLocaleDateString()}
                   </Typography>
                 </Box>
-                
+
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <AccessTimeIcon 
-                    sx={{ color: 'text.secondary', fontSize: '1rem', mr: 1 }} 
+                  <AccessTimeIcon
+                    sx={{ color: 'text.secondary', fontSize: '1rem', mr: 1 }}
                   />
                   <Typography variant="body2" color="text.secondary">
-                    {new Date(booking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - 
+                    {new Date(booking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -
                     {new Date(booking.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </Typography>
                 </Box>
-                
+
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
                   {booking.notes || "No additional notes provided."}
                 </Typography>
@@ -374,7 +365,7 @@ const NannyDashboard = () => {
                     {booking.childrenCount} {booking.childrenCount === 1 ? 'child' : 'children'}
                   </Typography>
                 </Box>
-                
+
                 <Box sx={{ mt: 'auto' }}>
                   {status === 'pending' && (
                     <>
@@ -413,7 +404,7 @@ const NannyDashboard = () => {
                       </Button>
                     </>
                   )}
-                  
+
                   {status === 'confirmed' && (
                     <>
                       <Button
@@ -441,7 +432,7 @@ const NannyDashboard = () => {
                       </Button>
                     </>
                   )}
-                  
+
                   {(status === 'completed' || status === 'cancelled') && (
                     <Button
                       variant="outlined"
@@ -504,23 +495,23 @@ const NannyDashboard = () => {
         <Box sx={{ position: 'absolute', right: 0, bottom: 0, opacity: 0.1 }}>
           <ChildCareIcon sx={{ fontSize: 180, transform: 'rotate(15deg)' }} />
         </Box>
-        
+
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} md={9}>
             <Typography variant="h4" component="h1" sx={{ mb: 1, fontWeight: 700 }}>
               Welcome back, {user?.firstName || 'Nanny'}!
-      </Typography>
+            </Typography>
             <Typography variant="body1" sx={{ mb: 2, opacity: 0.9 }}>
               Manage your bookings and connect with families all in one place.
             </Typography>
           </Grid>
-          
+
           <Grid item xs={12} md={3}>
             <Box sx={{ display: 'flex', justifyContent: { xs: 'center', md: 'flex-end' } }}>
-              <Box 
-                sx={{ 
-                  bgcolor: 'white', 
-                  borderRadius: '50%', 
+              <Box
+                sx={{
+                  bgcolor: 'white',
+                  borderRadius: '50%',
                   p: 0.5,
                   width: { xs: 100, md: 120 },
                   height: { xs: 100, md: 120 },
@@ -531,11 +522,11 @@ const NannyDashboard = () => {
                   border: '4px solid rgba(255,255,255,0.2)'
                 }}
               >
-                <Avatar 
+                <Avatar
                   src={user?.profilePicture}
                   alt={user?.fullName}
-                  sx={{ 
-                    width: '95%', 
+                  sx={{
+                    width: '95%',
                     height: '95%',
                   }}
                 />
@@ -547,11 +538,11 @@ const NannyDashboard = () => {
 
       {/* Statistics Cards */}
       <Box sx={{ mb: 6 }}>
-        <Typography 
-          variant="h5" 
-          component="h2" 
-          sx={{ 
-            mb: 3, 
+        <Typography
+          variant="h5"
+          component="h2"
+          sx={{
+            mb: 3,
             fontWeight: 600,
             position: 'relative',
             display: 'inline-block',
@@ -569,10 +560,10 @@ const NannyDashboard = () => {
         >
           Booking Statistics
         </Typography>
-        
+
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <Paper 
+            <Paper
               elevation={0}
               sx={{
                 p: 3,
@@ -590,8 +581,8 @@ const NannyDashboard = () => {
                 }
               }}
             >
-              <Box 
-                sx={{ 
+              <Box
+                sx={{
                   position: 'absolute',
                   right: -15,
                   bottom: -15,
@@ -606,10 +597,10 @@ const NannyDashboard = () => {
               >
                 <PendingActionsIcon sx={{ fontSize: 40, color: 'warning.main' }} />
               </Box>
-              
-              <Typography 
-                variant="h3" 
-                component="div" 
+
+              <Typography
+                variant="h3"
+                component="div"
                 sx={{ fontWeight: 700, color: 'warning.dark', mb: 1 }}
               >
                 {bookings.filter(b => b.status === 'pending').length}
@@ -619,9 +610,9 @@ const NannyDashboard = () => {
               </Typography>
             </Paper>
           </Grid>
-          
+
           <Grid item xs={12} sm={6} md={3}>
-            <Paper 
+            <Paper
               elevation={0}
               sx={{
                 p: 3,
@@ -639,8 +630,8 @@ const NannyDashboard = () => {
                 }
               }}
             >
-              <Box 
-                sx={{ 
+              <Box
+                sx={{
                   position: 'absolute',
                   right: -15,
                   bottom: -15,
@@ -655,10 +646,10 @@ const NannyDashboard = () => {
               >
                 <CheckCircleIcon sx={{ fontSize: 40, color: '#7b1fa2' }} />
               </Box>
-              
-              <Typography 
-                variant="h3" 
-                component="div" 
+
+              <Typography
+                variant="h3"
+                component="div"
                 sx={{ fontWeight: 700, color: '#6a1b9a', mb: 1 }}
               >
                 {bookings.filter(b => b.status === 'confirmed').length}
@@ -668,9 +659,9 @@ const NannyDashboard = () => {
               </Typography>
             </Paper>
           </Grid>
-          
+
           <Grid item xs={12} sm={6} md={3}>
-            <Paper 
+            <Paper
               elevation={0}
               sx={{
                 p: 3,
@@ -688,8 +679,8 @@ const NannyDashboard = () => {
                 }
               }}
             >
-              <Box 
-                sx={{ 
+              <Box
+                sx={{
                   position: 'absolute',
                   right: -15,
                   bottom: -15,
@@ -704,10 +695,10 @@ const NannyDashboard = () => {
               >
                 <AssignmentIcon sx={{ fontSize: 40, color: '#3f51b5' }} />
               </Box>
-              
-              <Typography 
-                variant="h3" 
-                component="div" 
+
+              <Typography
+                variant="h3"
+                component="div"
                 sx={{ fontWeight: 700, color: '#3f51b5', mb: 1 }}
               >
                 {bookings.filter(b => b.status === 'completed').length}
@@ -717,9 +708,9 @@ const NannyDashboard = () => {
               </Typography>
             </Paper>
           </Grid>
-          
+
           <Grid item xs={12} sm={6} md={3}>
-            <Paper 
+            <Paper
               elevation={0}
               sx={{
                 p: 3,
@@ -737,8 +728,8 @@ const NannyDashboard = () => {
                 }
               }}
             >
-              <Box 
-                sx={{ 
+              <Box
+                sx={{
                   position: 'absolute',
                   right: -15,
                   bottom: -15,
@@ -753,10 +744,10 @@ const NannyDashboard = () => {
               >
                 <CancelIcon sx={{ fontSize: 40, color: 'error.main' }} />
               </Box>
-              
-              <Typography 
-                variant="h3" 
-                component="div" 
+
+              <Typography
+                variant="h3"
+                component="div"
                 sx={{ fontWeight: 700, color: 'error.dark', mb: 1 }}
               >
                 {bookings.filter(b => b.status === 'cancelled').length}
@@ -771,11 +762,11 @@ const NannyDashboard = () => {
 
       {/* Booking Management Tabs */}
       <Box sx={{ mb: 6 }}>
-        <Typography 
-          variant="h5" 
-          component="h2" 
-          sx={{ 
-            mb: 3, 
+        <Typography
+          variant="h5"
+          component="h2"
+          sx={{
+            mb: 3,
             fontWeight: 600,
             position: 'relative',
             display: 'inline-block',
@@ -793,20 +784,20 @@ const NannyDashboard = () => {
         >
           Booking Management
         </Typography>
-        
-        <Paper 
-          elevation={0} 
-          sx={{ 
-            borderRadius: 3, 
+
+        <Paper
+          elevation={0}
+          sx={{
+            borderRadius: 3,
             overflow: 'hidden',
             border: '1px solid',
             borderColor: 'divider',
           }}
         >
-        <Tabs
-          value={tabValue}
-          onChange={handleTabChange}
-          variant="fullWidth"
+          <Tabs
+            value={tabValue}
+            onChange={handleTabChange}
+            variant="fullWidth"
             sx={{
               borderBottom: '1px solid',
               borderColor: 'divider',
@@ -827,12 +818,12 @@ const NannyDashboard = () => {
               }
             }}
           >
-            <Tab 
+            <Tab
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Box 
-                    sx={{ 
-                      display: 'inline-flex', 
+                  <Box
+                    sx={{
+                      display: 'inline-flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       bgcolor: tabValue === 0 ? 'primary.lighter' : 'transparent',
@@ -848,14 +839,14 @@ const NannyDashboard = () => {
                   </Box>
                   <span>Pending</span>
                 </Box>
-              } 
+              }
             />
-            <Tab 
+            <Tab
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Box 
-                    sx={{ 
-                      display: 'inline-flex', 
+                  <Box
+                    sx={{
+                      display: 'inline-flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       bgcolor: tabValue === 1 ? 'primary.lighter' : 'transparent',
@@ -871,14 +862,14 @@ const NannyDashboard = () => {
                   </Box>
                   <span>Confirmed</span>
                 </Box>
-              } 
+              }
             />
-            <Tab 
+            <Tab
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Box 
-                    sx={{ 
-                      display: 'inline-flex', 
+                  <Box
+                    sx={{
+                      display: 'inline-flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       bgcolor: tabValue === 2 ? 'primary.lighter' : 'transparent',
@@ -894,14 +885,14 @@ const NannyDashboard = () => {
                   </Box>
                   <span>Completed</span>
                 </Box>
-              } 
+              }
             />
-            <Tab 
+            <Tab
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Box 
-                    sx={{ 
-                      display: 'inline-flex', 
+                  <Box
+                    sx={{
+                      display: 'inline-flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       bgcolor: tabValue === 3 ? 'primary.lighter' : 'transparent',
@@ -917,9 +908,9 @@ const NannyDashboard = () => {
                   </Box>
                   <span>Declined</span>
                 </Box>
-              } 
+              }
             />
-        </Tabs>
+          </Tabs>
 
           {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', p: 6 }}>
@@ -933,26 +924,26 @@ const NannyDashboard = () => {
             </Box>
           ) : (
             <>
-        <TabPanel value={tabValue} index={0}>
+              <TabPanel value={tabValue} index={0}>
                 {renderBookingsList('pending')}
-        </TabPanel>
-        <TabPanel value={tabValue} index={1}>
+              </TabPanel>
+              <TabPanel value={tabValue} index={1}>
                 {renderBookingsList('confirmed')}
-        </TabPanel>
-        <TabPanel value={tabValue} index={2}>
+              </TabPanel>
+              <TabPanel value={tabValue} index={2}>
                 {renderBookingsList('completed')}
-        </TabPanel>
-        <TabPanel value={tabValue} index={3}>
+              </TabPanel>
+              <TabPanel value={tabValue} index={3}>
                 {renderBookingsList('cancelled')}
-        </TabPanel>
+              </TabPanel>
             </>
           )}
-      </Paper>
+        </Paper>
       </Box>
 
       {/* Response Dialog */}
-      <Dialog 
-        open={responseDialogOpen} 
+      <Dialog
+        open={responseDialogOpen}
         onClose={() => setResponseDialogOpen(false)}
         maxWidth="sm"
         fullWidth
@@ -963,8 +954,8 @@ const NannyDashboard = () => {
           }
         }}
       >
-        <DialogTitle sx={{ 
-          fontSize: '1.5rem', 
+        <DialogTitle sx={{
+          fontSize: '1.5rem',
           fontWeight: 600,
           color: responseAction === 'accept' ? '#7C4DFF' : 'error.main',
           pb: 1
@@ -973,28 +964,28 @@ const NannyDashboard = () => {
         </DialogTitle>
         <DialogContent sx={{ pt: 3 }}>
           <Box sx={{ mb: 3 }}>
-            <Typography 
-              variant="body1" 
-              component="p" 
+            <Typography
+              variant="body1"
+              component="p"
               sx={{ mb: 3, color: 'text.secondary' }}
             >
-            {responseAction === 'accept'
-                ? 'You are about to accept this booking request. Once accepted, the parent will be notified, and the booking will be confirmed.' 
-              : 'You are about to decline this booking request. Please provide a reason for declining.'}
+              {responseAction === 'accept'
+                ? 'You are about to accept this booking request. Once accepted, the parent will be notified, and the booking will be confirmed.'
+                : 'You are about to decline this booking request. Please provide a reason for declining.'}
             </Typography>
           </Box>
-          
+
           {responseAction === 'decline' && (
-          <TextField
-            autoFocus
-            multiline
+            <TextField
+              autoFocus
+              multiline
               rows={4}
               variant="outlined"
               label="Reason for declining"
               fullWidth
-            value={responseMessage}
-            onChange={(e) => setResponseMessage(e.target.value)}
-              sx={{ 
+              value={responseMessage}
+              onChange={(e) => setResponseMessage(e.target.value)}
+              sx={{
                 mb: 2,
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 2
@@ -1004,10 +995,10 @@ const NannyDashboard = () => {
           )}
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button 
+          <Button
             onClick={() => setResponseDialogOpen(false)}
             variant="outlined"
-            sx={{ 
+            sx={{
               px: 3,
               borderRadius: 2,
               textTransform: 'none',
@@ -1016,11 +1007,11 @@ const NannyDashboard = () => {
           >
             Cancel
           </Button>
-          <Button 
-            onClick={handleResponseConfirm} 
+          <Button
+            onClick={handleResponseConfirm}
             variant="contained"
             color={responseAction === 'accept' ? 'primary' : 'error'}
-            sx={{ 
+            sx={{
               px: 3,
               borderRadius: 2,
               textTransform: 'none',
@@ -1038,8 +1029,8 @@ const NannyDashboard = () => {
       </Dialog>
 
       {/* Complete Booking Dialog */}
-      <Dialog 
-        open={completeDialogOpen} 
+      <Dialog
+        open={completeDialogOpen}
         onClose={() => setCompleteDialogOpen(false)}
         maxWidth="sm"
         fullWidth
@@ -1050,8 +1041,8 @@ const NannyDashboard = () => {
           }
         }}
       >
-        <DialogTitle sx={{ 
-          fontSize: '1.5rem', 
+        <DialogTitle sx={{
+          fontSize: '1.5rem',
           fontWeight: 600,
           color: 'primary.main',
           pb: 1
@@ -1060,15 +1051,15 @@ const NannyDashboard = () => {
         </DialogTitle>
         <DialogContent sx={{ pt: 3 }}>
           <Box sx={{ mb: 3 }}>
-            <Typography 
-              variant="body1" 
-              component="p" 
+            <Typography
+              variant="body1"
+              component="p"
               sx={{ mb: 3, color: 'text.secondary' }}
             >
               You are about to mark this booking as complete. Please provide any additional notes about this booking session:
             </Typography>
           </Box>
-          
+
           <TextField
             autoFocus
             multiline
@@ -1078,7 +1069,7 @@ const NannyDashboard = () => {
             fullWidth
             value={completeNotes}
             onChange={(e) => setCompleteNotes(e.target.value)}
-            sx={{ 
+            sx={{
               mb: 2,
               '& .MuiOutlinedInput-root': {
                 borderRadius: 2
@@ -1087,10 +1078,10 @@ const NannyDashboard = () => {
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button 
+          <Button
             onClick={() => setCompleteDialogOpen(false)}
             variant="outlined"
-            sx={{ 
+            sx={{
               px: 3,
               borderRadius: 2,
               textTransform: 'none',
@@ -1099,10 +1090,10 @@ const NannyDashboard = () => {
           >
             Cancel
           </Button>
-          <Button 
+          <Button
             onClick={handleCompleteConfirm}
             variant="contained"
-            sx={{ 
+            sx={{
               px: 3,
               borderRadius: 2,
               textTransform: 'none',
@@ -1130,8 +1121,8 @@ const NannyDashboard = () => {
           }
         }}
       >
-        <DialogTitle sx={{ 
-          fontSize: '1.5rem', 
+        <DialogTitle sx={{
+          fontSize: '1.5rem',
           fontWeight: 600,
           color: 'primary.main',
           pb: 1
@@ -1145,24 +1136,24 @@ const NannyDashboard = () => {
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <Avatar
                     src={selectedBooking.parent?.profilePicture || selectedBooking.parentId?.profilePicture}
-                    alt={(selectedBooking.parent?.firstName && selectedBooking.parent?.lastName) ? 
-                         `${selectedBooking.parent.firstName} ${selectedBooking.parent.lastName}` : 
-                         selectedBooking.parentId?.name || "Parent"}
+                    alt={(selectedBooking.parent?.firstName && selectedBooking.parent?.lastName) ?
+                      `${selectedBooking.parent.firstName} ${selectedBooking.parent.lastName}` :
+                      selectedBooking.parentId?.name || "Parent"}
                     sx={{ width: 100, height: 100, mb: 2 }}
                   />
                   <Typography variant="h6" gutterBottom>
-                    {(selectedBooking.parent?.firstName && selectedBooking.parent?.lastName) ? 
-                     `${selectedBooking.parent.firstName} ${selectedBooking.parent.lastName}` : 
-                     selectedBooking.parent?.fullName || selectedBooking.parentId?.name || "Parent"}
+                    {(selectedBooking.parent?.firstName && selectedBooking.parent?.lastName) ?
+                      `${selectedBooking.parent.firstName} ${selectedBooking.parent.lastName}` :
+                      selectedBooking.parent?.fullName || selectedBooking.parentId?.name || "Parent"}
                   </Typography>
-                  <Chip 
+                  <Chip
                     label={selectedBooking.status}
                     color={
                       selectedBooking.status === 'pending' ? 'warning' :
-                      selectedBooking.status === 'confirmed' ? 'primary' :
-                      selectedBooking.status === 'completed' ? 'secondary' : 'error'
+                        selectedBooking.status === 'confirmed' ? 'primary' :
+                          selectedBooking.status === 'completed' ? 'secondary' : 'error'
                     }
-                    sx={{ 
+                    sx={{
                       mt: 1,
                       ...(selectedBooking.status === 'confirmed' && {
                         bgcolor: '#7C4DFF',
@@ -1176,7 +1167,7 @@ const NannyDashboard = () => {
                   />
                 </Box>
               </Grid>
-              
+
               <Grid item xs={12} md={8}>
                 <Box sx={{ mb: 3 }}>
                   <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
@@ -1201,7 +1192,7 @@ const NannyDashboard = () => {
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                           <AccessTimeIcon sx={{ color: 'primary.main', mr: 1, fontSize: '1.2rem' }} />
                           <Typography variant="body1">
-                            {new Date(selectedBooking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - 
+                            {new Date(selectedBooking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -
                             {new Date(selectedBooking.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </Typography>
                         </Box>
@@ -1234,7 +1225,7 @@ const NannyDashboard = () => {
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                           <ChildCareIcon sx={{ color: 'primary.main', mr: 1, fontSize: '1.2rem' }} />
                           <Typography variant="body1">
-                            {selectedBooking.childrenCount || selectedBooking.numberOfChildren || '1'} 
+                            {selectedBooking.childrenCount || selectedBooking.numberOfChildren || '1'}
                             {(selectedBooking.childrenCount === 1 || selectedBooking.numberOfChildren === 1) ? ' child' : ' children'}
                             {selectedBooking.childrenAges && selectedBooking.childrenAges.length > 0 && ` (Ages: ${selectedBooking.childrenAges.join(', ')})`}
                           </Typography>
@@ -1245,7 +1236,7 @@ const NannyDashboard = () => {
                           <PaymentIcon sx={{ color: 'primary.main', mr: 1, fontSize: '1.2rem', mt: 0.3 }} />
                           <Box>
                             <Typography variant="body1" fontWeight="medium" color="#7C4DFF">
-                              Total: ₹{selectedBooking.totalPrice > 0 ? selectedBooking.totalPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : (selectedBooking.nannyId?.hourlyRate || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                              Total: ₹{selectedBooking.totalPrice > 0 ? selectedBooking.totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : (selectedBooking.nannyId?.hourlyRate || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </Typography>
                             <Typography variant="caption" color="text.secondary">
                               {selectedBooking.serviceType === 'part-time' ? 'Part-time Care' : 'Full-time Care'}
@@ -1256,7 +1247,7 @@ const NannyDashboard = () => {
                     </Grid>
                   </Paper>
                 </Box>
-                
+
                 <Box sx={{ mb: 3 }}>
                   <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
                     Notes
@@ -1267,7 +1258,7 @@ const NannyDashboard = () => {
                     </Typography>
                   </Paper>
                 </Box>
-                
+
                 {selectedBooking.nannyMessage && (
                   <Box sx={{ mb: 3 }}>
                     <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
@@ -1280,7 +1271,7 @@ const NannyDashboard = () => {
                     </Paper>
                   </Box>
                 )}
-                
+
                 {selectedBooking.completionNotes && (
                   <Box sx={{ mb: 3 }}>
                     <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
@@ -1298,11 +1289,11 @@ const NannyDashboard = () => {
           )}
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button 
+          <Button
             onClick={() => setViewDetailDialogOpen(false)}
             variant="contained"
             color="primary"
-            sx={{ 
+            sx={{
               px: 3,
               borderRadius: 2,
               textTransform: 'none',
@@ -1317,218 +1308,16 @@ const NannyDashboard = () => {
   );
 };
 
-const BookingsList = ({ bookings, onResponseClick, onCompleteClick, emptyMessage }) => {
-  if (bookings.length === 0) {
-    return (
-      <Alert 
-        severity="info" 
-        sx={{ 
-          mt: 2, 
-          borderRadius: 2,
-          display: 'flex',
-          alignItems: 'center',
-          py: 2
-        }}
-      >
-        {emptyMessage}
-      </Alert>
-    );
-  }
-
-  return (
-    <Grid container spacing={3}>
-      {bookings.map((booking) => (
-        <Grid item xs={12} key={booking._id}>
-          <Card 
-            elevation={2}
-            sx={{ 
-              borderRadius: 2,
-              transition: 'transform 0.2s, box-shadow 0.2s',
-              '&:hover': {
-                transform: 'translateY(-3px)',
-                boxShadow: 4
-              }
-            }}
-          >
-            <CardContent sx={{ pb: 0 }}>
-              <Grid container spacing={2}>
-                {/* Parent Info */}
-                <Grid item xs={12} sm={3}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <Avatar
-                      src={booking.parentId?.profileImage}
-                      alt={booking.parentId?.name}
-                      sx={{ 
-                        width: 80, 
-                        height: 80, 
-                        mb: 1,
-                        boxShadow: 2
-                      }}
-                    />
-                    <Typography variant="h6" fontWeight="bold" align="center">
-                      {booking.parentId?.name}
-                    </Typography>
-                    <Box sx={{ mt: 1 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 0.5 }}>
-                        <PhoneIcon sx={{ color: 'primary.main', fontSize: 16, mr: 0.5 }} />
-                        <Typography variant="body2">
-                          {booking.parentId?.phone || 'No phone provided'}
-                        </Typography>
-                      </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <EmailIcon sx={{ color: 'primary.main', fontSize: 16, mr: 0.5 }} />
-                        <Typography variant="body2">
-                          {booking.parentId?.email}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Box>
-                </Grid>
-
-                {/* Booking Details */}
-                <Grid item xs={12} sm={6}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <EventIcon sx={{ color: 'primary.main', mr: 1 }} />
-                    <Typography variant="body1" fontWeight="medium">
-                      {format(new Date(booking.startTime), 'EEEE, MMMM d, yyyy')}
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <AccessTimeIcon sx={{ color: 'primary.main', mr: 1 }} />
-                    <Typography variant="body1">
-                      {format(new Date(booking.startTime), 'h:mm a')} - {format(new Date(booking.endTime), 'h:mm a')}
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <LocationOnIcon sx={{ color: 'primary.main', mr: 1 }} />
-                    <Typography variant="body1">
-                      {booking.location.address}, {booking.location.city}, {booking.location.state} {booking.location.zipCode}
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <ChildCareIcon sx={{ color: 'primary.main', mr: 1 }} />
-                    <Typography variant="body1">
-                      {booking.numberOfChildren} {booking.numberOfChildren === 1 ? 'child' : 'children'} (Ages: {booking.childrenAges.join(', ')})
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <PersonIcon sx={{ color: 'primary.main', mr: 1 }} />
-                    <Typography variant="body1">
-                      Service Type: {booking.serviceType === 'part-time' ? 'Part-time Care' : 'Full-time Care'}
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <PaymentIcon sx={{ color: 'primary.main', mr: 1 }} />
-                    <Typography variant="body1" fontWeight="bold" sx={{ color: '#7C4DFF' }}>
-                      Total: ₹{booking.totalPrice > 0 ? booking.totalPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : (booking.nannyId?.hourlyRate || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                {/* Status and Actions */}
-                <Grid item xs={12} sm={3}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', height: '100%', justifyContent: 'space-between' }}>
-                    <StatusChip
-                      label={booking.status.toUpperCase()}
-                      status={booking.status}
-                      sx={{ fontWeight: 'bold', px: 1 }}
-                    />
-                    {booking.cancellationReason && (
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 1, textAlign: 'right' }}>
-                        Reason: {booking.cancellationReason}
-                      </Typography>
-                    )}
-                  </Box>
-                </Grid>
-              </Grid>
-
-              {booking.specialRequests && (
-                <Box sx={{ mt: 2 }}>
-                  <Divider sx={{ my: 1 }} />
-                  <Typography variant="subtitle2" fontWeight="bold" color="primary.main">
-                    Special Requests:
-                  </Typography>
-                  <Typography variant="body2">{booking.specialRequests}</Typography>
-                </Box>
-              )}
-
-              {booking.nannyMessage && (
-                <Box sx={{ mt: 2 }}>
-                  <Divider sx={{ my: 1 }} />
-                  <Typography variant="subtitle2" fontWeight="bold" color="primary.main">
-                    Your Message:
-                  </Typography>
-                  <Typography variant="body2">{booking.nannyMessage}</Typography>
-                </Box>
-              )}
-
-              {booking.completionNotes && (
-                <Box sx={{ mt: 2 }}>
-                  <Divider sx={{ my: 1 }} />
-                  <Typography variant="subtitle2" fontWeight="bold" color="primary.main">
-                    Completion Notes:
-                  </Typography>
-                  <Typography variant="body2">{booking.completionNotes}</Typography>
-                </Box>
-              )}
-            </CardContent>
-
-            <Divider />
-
-            <CardActions sx={{ justifyContent: 'flex-end', p: 2 }}>
-              {/* Show different actions based on booking status */}
-              {booking.status === 'pending' && (
-                <>
-                  <Button
-                    size="medium"
-                    color="error"
-                    variant="outlined"
-                    onClick={() => onResponseClick(booking._id, 'decline')}
-                    sx={{ mr: 1, borderRadius: 2 }}
-                  >
-                    Decline
-                  </Button>
-                  <Button
-                    size="medium"
-                    color="primary"
-                    variant="contained"
-                    onClick={() => onResponseClick(booking._id, 'accept')}
-                    sx={{ borderRadius: 2 }}
-                  >
-                    Accept
-                  </Button>
-                </>
-              )}
-
-              {booking.status === 'confirmed' && (
-                <Button
-                  size="medium"
-                  color="primary"
-                  variant="contained"
-                  onClick={() => onCompleteClick(booking._id)}
-                  sx={{ borderRadius: 2, bgcolor: '#7b1fa2', '&:hover': { bgcolor: '#6a1b9a' } }}
-                >
-                  Mark as Completed
-                </Button>
-              )}
-            </CardActions>
-          </Card>
-        </Grid>
-      ))}
-    </Grid>
-  );
-};
-
 const formatLocation = (location) => {
   if (!location) return null;
-  
+
   let formattedLocation = '';
-  
+
   if (location.address) formattedLocation += location.address;
   if (location.city) formattedLocation += formattedLocation ? `, ${location.city}` : location.city;
   if (location.state) formattedLocation += formattedLocation ? `, ${location.state}` : location.state;
   if (location.zipCode) formattedLocation += formattedLocation ? ` ${location.zipCode}` : location.zipCode;
-  
+
   return formattedLocation || null;
 };
 
